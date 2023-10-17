@@ -66,7 +66,7 @@ function App() {
     fontFamily: 'Arial, sans-serif',
     padding: '20px',
     position: 'relative',
-    backgroundColor: darkMode ? '#111' : '#ece8e0', // Lighter blue in light mode
+    backgroundColor: darkMode ? '#333' : '#ece8e0', // Lighter blue in light mode
     color: darkMode ? '#fff' : '#333',
     transition: 'background-color 0.3s ease, color 0.3s ease',
   };
