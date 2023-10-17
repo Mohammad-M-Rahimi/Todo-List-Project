@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect } from 'react';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
@@ -65,15 +66,16 @@ function App() {
     fontFamily: 'Arial, sans-serif',
     padding: '20px',
     position: 'relative',
-    backgroundColor: darkMode ? '#111' : '#fff',
+    backgroundColor: darkMode ? '#111' : '#ece8e0', // Lighter blue in light mode
     color: darkMode ? '#fff' : '#333',
     transition: 'background-color 0.3s ease, color 0.3s ease',
   };
+  
 
   const buttonContainerStyle = {
     position: 'absolute',
     top: '10px',
-    left: '10px',  // Adjusted to top left
+    left: '10px',
     display: 'flex',
     alignItems: 'center',
   };
