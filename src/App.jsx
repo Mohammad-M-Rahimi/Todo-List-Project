@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import FilterBar from './components/FilterBar';
+import { FaLightbulb, FaMoon } from 'react-icons/fa';
 
 export const availableTags = ["Work", "Buy", "Sell", "Meet", "See"];
 
@@ -62,28 +61,27 @@ function App() {
   );
 
   const appStyle = {
-    textAlign: 'left',  // Align content to the left
+    textAlign: 'left',
     fontFamily: 'Arial, sans-serif',
     padding: '20px',
     position: 'relative',
-    backgroundColor: darkMode ? '#333333' : '#f0f0f0',
-    color: darkMode ? '#ffffff' : '#000000',
+    backgroundColor: darkMode ? '#111' : '#fff',
+    color: darkMode ? '#fff' : '#333',
+    transition: 'background-color 0.3s ease, color 0.3s ease',
   };
 
   const buttonContainerStyle = {
     position: 'absolute',
     top: '10px',
-    left: '50%',
-    transform: 'translateX(-50%)',
+    left: '10px',  // Adjusted to top left
+    display: 'flex',
+    alignItems: 'center',
   };
 
-  const buttonStyle = {
-    backgroundColor: 'transparent',
-    border: 'none',
+  const iconStyle = {
+    fontSize: '2rem',
+    marginRight: '10px',
     cursor: 'pointer',
-    fontSize: '1.5rem',
-    color: darkMode ? '#ffffff' : '#000000',
-    transition: 'color 0.3s ease-in-out',
   };
 
   const toggleDarkMode = () => {
@@ -93,47 +91,32 @@ function App() {
   return (
     <div style={appStyle}>
       <div style={buttonContainerStyle}>
-        <button
+        <div
           onClick={toggleDarkMode}
-          style={{ ...buttonStyle, ...(darkMode && { color: '#ffff' }) }}
+          style={iconStyle}
         >
-          <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
-        </button>
+          {darkMode ? <FaMoon /> : <FaLightbulb />}
+        </div>
+        <div>
+          {darkMode ? "" : ""}
+        </div>
       </div>
 
-      <h1 style={{ color: '#0066cc', textAlign: 'left' }}>Todo List</h1>
+      <TodoForm
+        onAddTodo={handleAddTodo}
+        editingItem={editingItem}
+        onEditTodo={handleEditTodo}
+      />
 
-      {/* Move TodoForm to the left */}
-      <div style={{ marginLeft: '10px' }}>
-        <TodoForm
-          onAddTodo={handleAddTodo}
-          editingItem={editingItem}
-          onEditTodo={handleEditTodo}
-        />
-
-        {/* Move FilterBar to the left */}
-        <FilterBar
-          searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
-          darkMode={darkMode}
-        />
-
-        {/* Move the TodoList header and tag selector to the left */}
-        <h2 style={{ color: '#0066cc' }}>My Tasks</h2>
-        <label htmlFor="tagSelector">Select Tag:</label>
-        <select
-          id="tagSelector"
-          value={selectedTag}
-          onChange={(e) => setSelectedTag(e.target.value)}
-        >
-          <option value="">All</option>
-          {availableTags.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-      </div>
+      <FilterBar
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
+        darkMode={darkMode}
+        onFilterClick={() => {
+          // Handle filter logic here
+          console.log("Filtering tasks");
+        }}
+      />
 
       <TodoList
         todos={filteredTodos}
