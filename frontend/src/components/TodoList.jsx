@@ -38,17 +38,35 @@ const taskStyle = {
   marginLeft: '10px',
 };
 
+const checkboxStyle = {
+  width: '20px',
+  height: '20px',
+  borderRadius: '50%',
+  border: '2px solid #4CAF50', // Green color when not checked
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: '10px',
+};
+
+const checkedStyle = {
+  backgroundColor: '#4CAF50', // Green color when checked
+  borderRadius: '50%',
+};
+
 function TodoList({ todos, onCheckboxChange, onDelete, onEdit, darkMode }) {
   return (
     <ul>
       {todos.map((todo) => (
         <li key={todo.id} style={listItemStyle(darkMode)}>
           <div style={iconContainerStyle}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => onCheckboxChange(todo.id)}
-            />
+            <div
+              style={{ ...checkboxStyle, ...(todo.completed ? checkedStyle : {}) }}
+              onClick={() => onCheckboxChange(todo.id)}
+            >
+              {todo.completed && <div>&#10003;</div>}
+            </div>
             <span style={taskStyle}>{todo.title} - {todo.tag}</span>
           </div>
           <div style={iconContainerStyle}>

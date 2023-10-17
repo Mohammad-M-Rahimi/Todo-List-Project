@@ -1,16 +1,16 @@
-const Task = require('../models/Task');
+const Task = require("../models/Task");
 
 const createTask = async (req, res) => {
   try {
     // Validating the request parameters
-    if (!req.body.name || !req.body.color) {
+    if (!req.body.name || !req.body.category) {
       return res.status(404).send({ message: "Invalid request body" });
     }
 
     // converting request body to object
     const newTask = {
       name: req.body.name,
-      color: req.body.color
+      category: req.body.category,
     };
 
     // create a Task object from the TaskModel
@@ -53,7 +53,7 @@ const getTask = async (req, res) => {
 const editTask = async (req, res) => {
   try {
     // body params validation
-    if (!req.body.name || !req.body.color) {
+    if (!req.body.name || !req.body.category) {
       return res.status(404).send({ message: "Invalid request body" });
     }
     // find and update
