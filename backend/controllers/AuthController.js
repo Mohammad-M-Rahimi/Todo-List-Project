@@ -22,7 +22,7 @@ const register = async (req, res, next) => {
 
 const login = (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
-    if (err) return next(err);
+    if (err) return res.status(200).next(err);
 
     if (!user) {
       return res.status(400).json({ message: info.message });

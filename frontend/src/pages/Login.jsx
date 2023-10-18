@@ -1,4 +1,7 @@
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -12,15 +15,70 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider } from "@mui/material/styles";
 import Theme from "../theme/theme";
+import axios from "axios";
 
-export default function Login() {
-  const handleSubmit = (event) => {
+const Login = () => {
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+
+  const handleClose = () => {
+    setAlert((prev) => ({ ...prev, open: false }));
+  };
+
+  const handleRedirectToHome = () => {
+    window.location.href = "./";
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(data.get("email"));
+
+    if (!isEmailValid) {
+      setAlert({
+        open: true,
+        message: "Please enter a valid email address.",
+        severity: "error",
+      });
+    } else {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/api/auth/login",
+          {
+            email: data.get("email"),
+            password: data.get("password"),
+          }
+        );
+
+        if (response.status === 200) {
+          setAlert({
+            open: true,
+            message: "Login successful!",
+            severity: "success",
+          });
+
+          setTimeout(handleRedirectToHome, 1000);
+        } else {
+          setAlert({
+            open: true,
+            message: "Login failed!",
+            severity: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+        setAlert({
+          open: true,
+          message: "Login failed!",
+          severity: "error",
+        });
+      }
+    }
   };
 
   return (
@@ -109,6 +167,23 @@ export default function Login() {
           </Box>
         </Grid>
       </Grid>
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleClose}
+          severity={alert.severity}
+        >
+          {alert.message}
+        </MuiAlert>
+      </Snackbar>
     </ThemeProvider>
   );
-}
+};
+
+export default Login;

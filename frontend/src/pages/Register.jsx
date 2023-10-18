@@ -34,38 +34,63 @@ const Register = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:5000/api/auth/register",
-        {
-          userName: data.get("userName"),
-          email: data.get("email"),
-          password: data.get("password"),
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(data.get("email"));
+
+    const password = data.get("password");
+    const isPasswordValid =
+      password.length >= 6 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /[0-9]/.test(password);
+
+    if (!isEmailValid) {
+      setAlert({
+        open: true,
+        message: "Please enter a valid email address.",
+        severity: "error",
+      });
+    } else if (!isPasswordValid) {
+      setAlert({
+        open: true,
+        message:
+          "Password must be at least 6 characters long and include uppercase letter, lowercase letter, digit.",
+        severity: "error",
+      });
+    } else {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/api/auth/register",
+          {
+            userName: data.get("userName"),
+            email: data.get("email"),
+            password: data.get("password"),
+          }
+        );
+
+        if (response.status === 201) {
+          setAlert({
+            open: true,
+            message: "Registration successful!",
+            severity: "success",
+          });
+
+          setTimeout(handleRedirectToLogin, 1000);
+        } else {
+          setAlert({
+            open: true,
+            message: "Registration failed!",
+            severity: "error",
+          });
         }
-      );
-
-      if (response.status === 201) {
+      } catch (error) {
+        console.error("Registration failed:", error);
         setAlert({
           open: true,
-          message: "your account has successfully been created !",
-          severity: "success",
-        });
-
-        setTimeout(handleRedirectToLogin, 1000);
-      } else {
-        setAlert({
-          open: true,
-          message: "Something goes Wrong please try again!",
+          message: "Registration failed!",
           severity: "error",
         });
       }
-    } catch (error) {
-      console.error("Registration failed:", error);
-      setAlert({
-        open: true,
-        message: "Registration failed!",
-        severity: "error",
-      });
     }
   };
 
