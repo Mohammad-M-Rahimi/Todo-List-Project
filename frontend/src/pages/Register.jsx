@@ -162,7 +162,7 @@ const Register = () => {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="./Login" variant="body2">
-                  Already have an account? Sign in
+                  Already have an account?
                 </Link>
               </Grid>
             </Grid>

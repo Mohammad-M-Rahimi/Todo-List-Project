@@ -2,7 +2,6 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-
 const register = async (req, res, next) => {
   try {
     const { userName, email, password } = req.body;
@@ -29,6 +28,8 @@ const login = (req, res, next) => {
     }
 
     const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET);
+    // debug line below
+    console.log(token);
     return res.json({ token });
   })(req, res, next);
 };
