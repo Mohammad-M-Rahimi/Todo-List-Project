@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,23 +16,56 @@ import Theme from "../theme/theme";
 import axios from "axios";
 
 const Register = () => {
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+
+  const handleClose = () => {
+    setAlert((prev) => ({ ...prev, open: false }));
+  };
+
+  const handleRedirectToLogin = () => {
+    window.location.href = "./Login";
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/auth/register", {
-        userName: data.get('userName'),
-        email: data.get("email"),
-        password: data.get("password"),
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/auth/register",
+        {
+          userName: data.get("userName"),
+          email: data.get("email"),
+          password: data.get("password"),
+        }
+      );
 
-      // Handle successful registration, e.g., redirect to home page
-      // For simplicity, we'll log the response for now
-      console.log("Registration successful:", response.data);
+      if (response.status === 201) {
+        setAlert({
+          open: true,
+          message: "your account has successfully been created !",
+          severity: "success",
+        });
+
+        setTimeout(handleRedirectToLogin, 1000);
+      } else {
+        setAlert({
+          open: true,
+          message: "Something goes Wrong please try again!",
+          severity: "error",
+        });
+      }
     } catch (error) {
-      // Handle registration error
       console.error("Registration failed:", error);
+      setAlert({
+        open: true,
+        message: "Registration failed!",
+        severity: "error",
+      });
     }
   };
 
@@ -108,6 +144,21 @@ const Register = () => {
           </Box>
         </Box>
       </Container>
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleClose}
+          severity={alert.severity}
+        >
+          {alert.message}
+        </MuiAlert>
+      </Snackbar>
     </ThemeProvider>
   );
 };
