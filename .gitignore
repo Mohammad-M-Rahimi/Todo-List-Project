@@ -1713,7 +1713,6 @@ backend/node_modules/yallist/LICENSE
 backend/node_modules/yallist/package.json
 backend/node_modules/yallist/README.md
 backend/node_modules/yallist/yallist.js
-frontend/src/pages/Home.jsx
 backend/node_modules/.bin/color-support
 backend/node_modules/.bin/color-support.cmd
 backend/node_modules/.bin/color-support.ps1
