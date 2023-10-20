@@ -56,6 +56,10 @@ const Login = () => {
         );
 
         if (response.status === 200) {
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.token}`;
+
           setAlert({
             open: true,
             message: "Login successful!",

@@ -21,17 +21,36 @@ const register = async (req, res, next) => {
 
 const login = (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
-    if (err) return res.status(200).next(err);
-
-    if (!user) {
-      return res.status(400).json({ message: info.message });
+    if (err) {
+      return next(err);
     }
 
-    const token = jwt.sign({ sub: user._id }, process.env.JWT_SECRET);
-    // debug line below
-    console.log(token);
-    return res.json({ token });
+    if (!user) {
+      return res.status(200).json({ message: info.message });
+    }
+
+    const token = generateToken(user._id);
+
+    // Send the token as a JSON response
+    res.status(200).json({ token });
   })(req, res, next);
 };
 
-module.exports = { login, register };
+
+const generateToken = (userId) => {
+  return jwt.sign({ sub: userId }, process.env.JWT_SECRET);
+};
+
+const validateToken = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user) => {
+    if (err) {
+      return res.status(500).json({ message: "Server Error" });
+    }
+    if (!user) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    res.status(200).json({ message: "Token is valid", user: user });
+  })(req, res, next);
+};
+
+module.exports = { login, register, validateToken };
