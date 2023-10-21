@@ -9,14 +9,11 @@ const isAuthenticated = async () => {
     );
 
     if (response.status === 200) {
-      console.log("Token validation is successfully completed, Results : Valid");
       return true;
     } else {
-      console.error("Response data:", response.data);
       return false;
     }
   } catch (error) {
-    console.error("Error validating token:", error);
     return false;
   }
 };
