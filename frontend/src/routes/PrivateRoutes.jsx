@@ -1,57 +1,35 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
-import axios from "axios";
+import isAuthenticated from "../service/isAuthenticated";
 
-const PrivateRoute = ({ component: Component, restricted, ...rest }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function PrivateRoute({ component: Component, ...rest }) {
+  const [authState, setAuthState] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("Token from localStorage:", token); // Log the token
-
-    if (token) {
-      validateTokenWithBackend(token);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
-
-  const validateTokenWithBackend = async (token) => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:5000/api/auth/token",
-        null,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        setIsAuthenticated(true); // Token is valid, user is authenticated
-      } else {
-        setIsAuthenticated(false); // Token is invalid, user is not authenticated
+    async function checkAuth() {
+      try {
+        const isAuth = await isAuthenticated();
+        setAuthState(isAuth);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.error("Error validating token:", error);
-      setIsAuthenticated(false);
     }
-  };
+    checkAuth();
+  }, []);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        isAuthenticated && restricted ? (
+        authState === true ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect
+            to={{ pathname: "/login", state: { from: props.location } }}
+          />
         )
       }
-    />
-  );
-};
+    );
+}
 
 export default PrivateRoute;

@@ -1,7 +1,11 @@
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const dotenv = require("dotenv");
 
+dotenv.config();
+
+// Register Handle Controller
 const register = async (req, res, next) => {
   try {
     const { userName, email, password } = req.body;
@@ -19,6 +23,7 @@ const register = async (req, res, next) => {
   }
 };
 
+// Register Handle Controller
 const login = (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) {
@@ -31,26 +36,28 @@ const login = (req, res, next) => {
 
     const token = generateToken(user._id);
 
-    // Send the token as a JSON response
     res.status(200).json({ token });
   })(req, res, next);
 };
-
 
 const generateToken = (userId) => {
   return jwt.sign({ sub: userId }, process.env.JWT_SECRET);
 };
 
-const validateToken = (req, res, next) => {
-  passport.authenticate("jwt", { session: false }, (err, user) => {
-    if (err) {
-      return res.status(500).json({ message: "Server Error" });
-    }
-    if (!user) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-    res.status(200).json({ message: "Token is valid", user: user });
-  })(req, res, next);
-};
+// Auth Handler Controller
+function authenticateToken(req, res) {
+  const token = req.body.token;
 
-module.exports = { login, register, validateToken };
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid token" });
+    }
+    return res.status(200).json({ user });
+  });
+}
+
+module.exports = { login, register, authenticateToken };
