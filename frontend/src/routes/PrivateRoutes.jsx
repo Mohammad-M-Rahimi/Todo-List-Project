@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import isAuthenticated from "../service/isAuthenticated";
-import Login from "../pages/Login";
+import Spinner from "../components/common/spinner";
 
 function PrivateRoute({ component: Component, ...rest }) {
   const [authState, setAuthState] = useState(null);
@@ -14,15 +14,15 @@ function PrivateRoute({ component: Component, ...rest }) {
         setAuthState(isAuth);
       } catch (error) {
         console.log(error);
-        setAuthState(false); // Handle error by setting authState to false
+        setAuthState(false); 
       }
     }
     checkAuth();
   }, []);
 
   if (authState === null) {
-    // While waiting for authentication, you can return a loading component
-    return <Login />;
+
+    return <Spinner />;
   }
 
   return (
