@@ -1,101 +1,106 @@
-import { useState } from "react";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
+import React, { useState, useEffect } from "react";
+import {
+  ThemeProvider,
+  CssBaseline,
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Tooltip,
+  Badge,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import theme from "../theme/theme";
-import Copyright from "../components/common/copyright";
-import AppBar from "../components/common/appbar";
-import Tooltip from "@mui/material/Tooltip";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/ExitToApp";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import AppBarComponent from "../components/Home/Appbar";
+import Tags from "../components/Home/Tags";
+import Logic from "../components/Home/Logic";
+import crypto from "crypto"; // Make sure to import the crypto module
 
 const Theme = theme;
 
-const data = [
-  { name: "Task 1", value: 5 },
-  { name: "Task 2", value: 8 },
-  { name: "Task 3", value: 3 },
-];
-
-const HandleLogout = () => {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
-};
-
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
+  const [newitem, setNewItem] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [newCategory, setNewCategory] = useState("");
+  const [tags, setTags] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const storedTags = JSON.parse(localStorage.getItem("tags"));
+    if (storedTags) {
+      setTags(storedTags);
+    }
+  }, []);
+
+  const handleDeleteTag = (tagToDelete) => {
+    const updatedTags = tags.filter((tag) => tag !== tagToDelete);
+    setTags(updatedTags);
+    localStorage.setItem("tags", JSON.stringify(updatedTags));
+  };
+
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleAddCategory = () => {
+    setDialogOpen(true);
+  };
+
+  const handleAddTag = () => {
+    if (newCategory.trim() === "") return;
+    const updatedTags = [...tags, newCategory];
+    localStorage.setItem("tags", JSON.stringify(updatedTags));
+    setTags(updatedTags);
+    setNewCategory("");
+  };
+
+  function handsubmit(e) {
+    e.preventDefault();
+    setTodos((currentTodos) => [
+      ...currentTodos,
+      { id: crypto.randomUUID(), title: newitem, completed: false },
+    ]);
+    setNewItem("");
+  }
+
+  function toggleTodo(id, completed) {
+    setTodos((currentTodos) =>
+      currentTodos.map((todo) => {
+        if (todo.id === id) {
+          todo.completed = completed;
+          return { ...todo, completed };
+        }
+        return todo;
+      })
+    );
+  }
+
+  function deleteTodo(id) {
+    setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   };
 
   return (
     <ThemeProvider theme={Theme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: "24px",
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: "36px",
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
-            <Tooltip title="Notifications" arrow>
-              <IconButton sx={{ marginRight: "15px" }} color="inherit">
-                <Badge color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Settings" arrow>
-              <IconButton sx={{ marginRight: "15px" }} color="inherit">
-                <Badge color="secondary">
-                  <SettingsIcon />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout" arrow>
-              <IconButton
-                sx={{ marginRight: "15px" }}
-                color="inherit"
-                onClick={HandleLogout}
-              >
-                <Badge color="secondary">
-                  <LogoutIcon />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-          </Toolbar>
-        </AppBar>
+        <AppBarComponent open={open} toggleDrawer={toggleDrawer} handleLogout={handleLogout} />
         <Box
           component="main"
           sx={{
@@ -106,10 +111,12 @@ export default function Dashboard() {
             flexGrow: 1,
             height: "100vh",
             overflow: "auto",
+            display: "flex",
+            paddingTop: "60px",
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
@@ -118,10 +125,18 @@ export default function Dashboard() {
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "column",
-                    height: 240,
+                    height: "auto",
                   }}
                 >
-                  <Typography>Main Tasks & filters</Typography>
+                  <Logic
+                    todos={todos}
+                    newitem={newitem}
+                    setNewItem={setNewItem}
+                    setTodos={setTodos}
+                    handsubmit={handsubmit}
+                    toggleTodo={toggleTodo}
+                    deleteTodo={deleteTodo}
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -131,37 +146,59 @@ export default function Dashboard() {
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "column",
-                    height: 240,
+                    height: "auto",
+                    minHeight: "228px",
                   }}
                 >
-                  <Typography>Add Category and show</Typography>
+                  <Button
+                    variant="outlined"
+                    onClick={handleAddCategory}
+                    sx={{
+                      mb: 1,
+                      width: "260px",
+                      backgroundColor: "#E25E3E",
+                      color: "white",
+                    }}
+                  >
+                    + New Category
+                  </Button>
+                  {newCategory && (
+                    <Typography variant="caption" color="textSecondary">
+                      Added: {newCategory}
+                    </Typography>
+                  )}
+                  <Tags tags={tags} handleDeleteTag={handleDeleteTag} />
                 </Paper>
               </Grid>
-              <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Typography>Sample Chart</Typography>
-                  <BarChart width={1000} height={200} data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#FF9B50" />
-                  </BarChart>
-                </Paper>
-              </Grid>
+              <Grid item xs={12} />
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>Add/Delete Tag</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Add a new tag or delete existing tags.
+          </DialogContentText>
+          <TextField
+            type="text"
+            placeholder="New Tag"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            sx={{ width: "100%" }}
+          />
+          <Tags tags={tags} handleDeleteTag={handleDeleteTag} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddTag} color="primary">
+            Add Tag
+          </Button>
+          <Button onClick={() => setDialogOpen(false)} color="secondary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 }
