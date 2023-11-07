@@ -100,7 +100,11 @@ export default function Dashboard() {
     <ThemeProvider theme={Theme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBarComponent open={open} toggleDrawer={toggleDrawer} handleLogout={handleLogout} />
+        <AppBarComponent
+          open={open}
+          toggleDrawer={toggleDrawer}
+          handleLogout={handleLogout}
+        />
         <Box
           component="main"
           sx={{
@@ -158,10 +162,17 @@ export default function Dashboard() {
                       width: "260px",
                       backgroundColor: "#E25E3E",
                       color: "white",
+                      "&:hover": {
+                        backgroundColor: "#C63D2F", // Change background color on hover
+                      },
+                      "&:active": {
+                        backgroundColor: "#C63D2F", // Change background color when clicked
+                      },
                     }}
                   >
                     + New Category
                   </Button>
+
                   {newCategory && (
                     <Typography variant="caption" color="textSecondary">
                       Added: {newCategory}
