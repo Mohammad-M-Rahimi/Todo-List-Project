@@ -64,6 +64,9 @@ export default function Dashboard() {
     localStorage.setItem("tags", JSON.stringify(updatedTags));
     setTags(updatedTags);
     setNewCategory("");
+
+    // Refresh the page
+    window.location.reload();
   };
 
   function handsubmit(e) {

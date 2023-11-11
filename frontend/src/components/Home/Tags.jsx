@@ -14,7 +14,7 @@ export default function Tags({ tags, handleDeleteTag }) {
           variant="outlined"
           style={{
             margin: "4px",
-            background: "#2590B1",
+            background: "grey ",
             color: "white",
             borderColor: "#E25E3E",
           }}
