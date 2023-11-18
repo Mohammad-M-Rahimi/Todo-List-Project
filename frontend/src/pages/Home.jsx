@@ -17,15 +17,9 @@ import AppBar from "../components/common/appbar";
 import Tooltip from "@mui/material/Tooltip";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import SettingsModal from "../components/Home/SettingsModal";
 
 const Theme = theme;
-
-const data = [
-  { name: "Task 1", value: 5 },
-  { name: "Task 2", value: 8 },
-  { name: "Task 3", value: 3 },
-];
 
 const HandleLogout = () => {
   localStorage.removeItem("token");
@@ -36,6 +30,18 @@ export default function Dashboard() {
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState("light");
+
+  const handleThemeModalOpen = () => {
+    setIsThemeModalOpen(true);
+  };
+
+  const handleThemeModalClose = (theme) => {
+    setIsThemeModalOpen(false);
+    setSelectedTheme(theme);
   };
 
   return (
@@ -77,12 +83,20 @@ export default function Dashboard() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Settings" arrow>
-              <IconButton sx={{ marginRight: "15px" }} color="inherit">
+              <IconButton
+                sx={{ marginRight: "15px" }}
+                color="inherit"
+                onClick={handleThemeModalOpen}
+              >
                 <Badge color="secondary">
                   <SettingsIcon />
                 </Badge>
               </IconButton>
             </Tooltip>
+            <SettingsModal
+              open={isThemeModalOpen}
+              onClose={handleThemeModalClose}
+            />
             <Tooltip title="Logout" arrow>
               <IconButton
                 sx={{ marginRight: "15px" }}
@@ -135,26 +149,6 @@ export default function Dashboard() {
                   }}
                 >
                   <Typography>Add Category and show</Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Typography>Sample Chart</Typography>
-                  <BarChart width={1000} height={200} data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#FF9B50" />
-                  </BarChart>
                 </Paper>
               </Grid>
             </Grid>
