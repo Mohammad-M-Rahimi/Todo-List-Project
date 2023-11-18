@@ -36,12 +36,11 @@ function Popup({
   setNewItem,
   setShowInput,
   editingId,
-  setEditingId,
-  setNewCategory,
   handleDeleteTag,
-  
 }) {
-  const [selectedColor, setSelectedColor] = useState(tagColors[selectedTag] || predefinedColors[0]);
+  const [selectedColor, setSelectedColor] = useState(
+    tagColors[selectedTag] || predefinedColors[0]
+  );
 
   const handleColorChange = (event) => {
     setSelectedColor(event.target.value);
@@ -85,12 +84,11 @@ function Popup({
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <div
                         style={{
-                          backgroundColor: tagColors[selectedTag], // Use tagColors[selectedTag] here
+                          backgroundColor: selectedColor, // Use selectedColor here
                           width: 10,
                           height: 10,
                           borderRadius: "50%",
                           marginRight: 10,
-                          display: "none",
                         }}
                       />
                       <span>{selected}</span>
@@ -117,22 +115,6 @@ function Popup({
                     </MenuItem>
                   ))}
                 </Select>
-
-                <FormControl fullWidth style={{ marginBottom: 5 }}>
-                  <InputLabel htmlFor="color-picker">Tag Color</InputLabel>
-                  <Input
-                    id="color-picker"
-                    type="color"
-                    value={selectedColor}
-                    onChange={handleColorChange}
-                    inputProps={{ list: "predefinedColors" }}
-                  />
-                  <datalist id="predefinedColors">
-                    {predefinedColors.map((color) => (
-                      <option key={color} value={color} />
-                    ))}
-                  </datalist>
-                </FormControl>
               </div>
               <Button
                 type="submit"

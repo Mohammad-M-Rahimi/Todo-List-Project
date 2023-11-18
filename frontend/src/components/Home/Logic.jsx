@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
-import Popup from "../Home/Popups";
+import Popup from "./Popup";
 
 const theme = createTheme({
   palette: {

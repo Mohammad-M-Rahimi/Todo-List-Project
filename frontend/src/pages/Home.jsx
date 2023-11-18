@@ -15,17 +15,29 @@ import {
   DialogTitle,
   AppBar,
   Toolbar,
-  IconButton,
   Typography,
-  Tooltip,
-  Badge,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import theme from "../theme/theme";
 import AppBarComponent from "../components/Home/Appbar";
 import Tags from "../components/Home/Tags";
 import Logic from "../components/Home/Logic";
-import crypto from "crypto"; // Make sure to import the crypto module
+import crypto from "crypto";
+import Input from "@mui/material/Input";
+const predefinedColors = [
+  "red",
+  "blue",
+  "lightblue",
+  "yellow",
+  "orange",
+  "green",
+  "purple",
+  "pink",
+  "black",
+];
 
 const Theme = theme;
 
@@ -36,12 +48,14 @@ export default function Dashboard() {
   const [newCategory, setNewCategory] = useState("");
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("");
+  const handleColorChange = (color) => {
+    setSelectedColor(color);
+  };
 
   useEffect(() => {
     const storedTags = JSON.parse(localStorage.getItem("tags"));
-    if (storedTags) {
-      setTags(storedTags);
-    }
+    if (storedTags) setTags(storedTags);
   }, []);
 
   const handleDeleteTag = (tagToDelete) => {
@@ -50,13 +64,9 @@ export default function Dashboard() {
     localStorage.setItem("tags", JSON.stringify(updatedTags));
   };
 
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const toggleDrawer = () => setOpen(!open);
 
-  const handleAddCategory = () => {
-    setDialogOpen(true);
-  };
+  const handleAddCategory = () => setDialogOpen(true);
 
   const handleAddTag = () => {
     if (newCategory.trim() === "") return;
@@ -64,33 +74,28 @@ export default function Dashboard() {
     localStorage.setItem("tags", JSON.stringify(updatedTags));
     setTags(updatedTags);
     setNewCategory("");
-    window.location.reload(); // This line is reloading the page, you may consider removing it
+    setDialogOpen(false); // Close the dialog after adding the tag
   };
 
-  function handsubmit(e) {
-    e.preventDefault();           
+  const handsubmit = (e) => {
+    e.preventDefault();
     setTodos((currentTodos) => [
       ...currentTodos,
       { id: crypto.randomUUID(), title: newitem, completed: false },
     ]);
     setNewItem("");
-  }
+  };
 
-  function toggleTodo(id, completed) {
+  const toggleTodo = (id, completed) => {
     setTodos((currentTodos) =>
-      currentTodos.map((todo) => {
-        if (todo.id === id) {
-          todo.completed = completed;
-          return { ...todo, completed };
-        }
-        return todo;
-      })
+      currentTodos.map((todo) =>
+        todo.id === id ? { ...todo, completed } : todo
+      )
     );
-  }
+  };
 
-  function deleteTodo(id) {
+  const deleteTodo = (id) =>
     setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
-  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -164,16 +169,15 @@ export default function Dashboard() {
                       backgroundColor: "#E25E3E",
                       color: "white",
                       "&:hover": {
-                        backgroundColor: "#C63D2F", // Change background color on hover
+                        backgroundColor: "#C63D2F",
                       },
                       "&:active": {
-                        backgroundColor: "#C63D2F", // Change background color when clicked
+                        backgroundColor: "#C63D2F",
                       },
                     }}
                   >
                     + New Category
                   </Button>
-
                   {newCategory && (
                     <Typography variant="caption" color="textSecondary">
                       Added: {newCategory}
@@ -188,14 +192,35 @@ export default function Dashboard() {
         </Box>
       </Box>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Add/Delete Tag</DialogTitle>
+        <DialogTitle>Write it Down</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Add a new tag or delete existing tags.
+          <DialogContentText style={{ paddingBottom: "10px" }}>
+            Add/delete tags
           </DialogContentText>
+
+
+
+          <FormControl fullWidth style={{ marginBottom: 5 }}>
+            <Input
+              id="color-picker"
+              type="color"
+              value={selectedColor}
+              onChange={handleColorChange}
+              inputProps={{ list: "predefinedColors" }}
+              style={{width:'55px'}}
+            />
+            <datalist id="predefinedColors">
+              {predefinedColors.map((color) => (
+                <option key={color} value={color} />
+              ))}
+            </datalist>
+          </FormControl>
+
+
+
+
           <TextField
             type="text"
-            placeholder="New Tag"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
             sx={{ width: "100%" }}
