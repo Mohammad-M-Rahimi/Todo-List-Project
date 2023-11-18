@@ -64,13 +64,11 @@ export default function Dashboard() {
     localStorage.setItem("tags", JSON.stringify(updatedTags));
     setTags(updatedTags);
     setNewCategory("");
-
-    // Refresh the page
-    window.location.reload();
+    window.location.reload(); // This line is reloading the page, you may consider removing it
   };
 
   function handsubmit(e) {
-    e.preventDefault();
+    e.preventDefault();           
     setTodos((currentTodos) => [
       ...currentTodos,
       { id: crypto.randomUUID(), title: newitem, completed: false },

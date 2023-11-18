@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -7,8 +7,23 @@ import {
   MenuItem,
   IconButton,
   Button,
+  FormControl,
+  InputLabel,
+  Input,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
+
+const predefinedColors = [
+  "red",
+  "blue",
+  "lightblue",
+  "yellow",
+  "orange",
+  "green",
+  "purple",
+  "pink",
+  "black",
+];
 
 function Popup({
   showInput,
@@ -24,14 +39,31 @@ function Popup({
   setEditingId,
   setNewCategory,
   handleDeleteTag,
+  
 }) {
+  const [selectedColor, setSelectedColor] = useState(tagColors[selectedTag] || predefinedColors[0]);
+
+  const handleColorChange = (event) => {
+    setSelectedColor(event.target.value);
+  };
+
   return (
     showInput && (
       <div className="popup">
-        <div className="popup-content" style={{ padding: 16, borderRadius: 4, boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
+        <div
+          className="popup-content"
+          style={{
+            padding: 16,
+            borderRadius: 4,
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <form onSubmit={handleAddOrEdit}>
             <Box>
-              <Typography variant="h5" style={{ textAlign: "center", marginBottom: 16 }}>
+              <Typography
+                variant="h5"
+                style={{ textAlign: "center", marginBottom: 16 }}
+              >
                 Add Your Task
               </Typography>
               <TextField
@@ -41,17 +73,24 @@ function Popup({
                 fullWidth
                 style={{ marginBottom: 5 }}
               />
-              <div style={{ display: "flex", alignItems: "center", padding: '5px' }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "5px",
+                }}
+              >
                 <Select
                   renderValue={(selected) => (
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <div
                         style={{
-                          backgroundColor: tagColors[selected],
+                          backgroundColor: tagColors[selectedTag], // Use tagColors[selectedTag] here
                           width: 10,
                           height: 10,
                           borderRadius: "50%",
                           marginRight: 10,
+                          display: "none",
                         }}
                       />
                       <span>{selected}</span>
@@ -66,15 +105,6 @@ function Popup({
                   {tags.map((tag) => (
                     <MenuItem key={tag} value={tag}>
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        <div
-                          style={{
-                            backgroundColor: tagColors[tag],
-                            width: 10,
-                            height: 10,
-                            borderRadius: "50%",
-                            marginRight: 10,
-                          }}
-                        />
                         <span>{tag}</span>
                       </div>
                       <IconButton
@@ -87,6 +117,22 @@ function Popup({
                     </MenuItem>
                   ))}
                 </Select>
+
+                <FormControl fullWidth style={{ marginBottom: 5 }}>
+                  <InputLabel htmlFor="color-picker">Tag Color</InputLabel>
+                  <Input
+                    id="color-picker"
+                    type="color"
+                    value={selectedColor}
+                    onChange={handleColorChange}
+                    inputProps={{ list: "predefinedColors" }}
+                  />
+                  <datalist id="predefinedColors">
+                    {predefinedColors.map((color) => (
+                      <option key={color} value={color} />
+                    ))}
+                  </datalist>
+                </FormControl>
               </div>
               <Button
                 type="submit"

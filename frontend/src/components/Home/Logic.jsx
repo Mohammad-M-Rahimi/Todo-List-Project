@@ -1,3 +1,4 @@
+// TodoList.js
 import React, { useState, useEffect } from "react";
 import {
   createTheme,
@@ -7,18 +8,14 @@ import {
   Typography,
   TextField,
   Button,
-  Select,
-  MenuItem,
   Checkbox,
   IconButton,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Close as CloseIcon,
-} from "@mui/icons-material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
-import Popup from "../Home/Popups"; // Import the Popup component
+import Popup from "../Home/Popups";
 
 const theme = createTheme({
   palette: {
@@ -32,16 +29,20 @@ const theme = createTheme({
   shape: { borderRadius: 18 },
 });
 
-function getRandomColor() {
-  const letters = "0123456789ABCDEF";
-  return (
-    "#" +
-    Array.from(
-      { length: 6 },
-      () => letters[Math.floor(Math.random() * 16)]
-    ).join("")
-  );
-}
+const predefinedColors = [
+  "#FF5733",
+  "#FFC300",
+  "#33FF57",
+  "#338CFF",
+  "#B633FF",
+  "#FF3362",
+  "#33FFE6",
+  "#8CFF33",
+  "#FF33A6",
+];
+
+const getRandomColor = () =>
+  predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
 
 const initialTags = JSON.parse(localStorage.getItem("tags")) || [
   "Work",
@@ -49,9 +50,11 @@ const initialTags = JSON.parse(localStorage.getItem("tags")) || [
   "Study",
 ];
 const tagColors = Object.fromEntries(
-  initialTags.map((tag) => [tag, getRandomColor()])
+  initialTags.map((tag, index) => [
+    tag,
+    predefinedColors[index % predefinedColors.length],
+  ])
 );
-const initialTagsList = [...initialTags];
 
 function TodoList() {
   const [todos, setTodos] = useState(
@@ -62,12 +65,11 @@ function TodoList() {
   const [editingId, setEditingId] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [newCategory, setNewCategory] = useState("");
-  const [tags, setTags] = useState(initialTagsList);
+  const [tags, setTags] = useState([...initialTags]);
 
-  useEffect(
-    () => localStorage.setItem("todos", JSON.stringify(todos)),
-    [todos]
-  );
+  useEffect(() => localStorage.setItem("todos", JSON.stringify(todos)), [
+    todos,
+  ]);
 
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
