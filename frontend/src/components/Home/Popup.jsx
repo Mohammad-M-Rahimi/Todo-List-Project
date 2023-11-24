@@ -1,31 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import {
-  Box,
-  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   TextField,
-  Select,
-  MenuItem,
-  IconButton,
   Button,
   FormControl,
   InputLabel,
-  Input,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
 
-const predefinedColors = [
-  "red",
-  "blue",
-  "lightblue",
-  "yellow",
-  "orange",
-  "green",
-  "purple",
-  "pink",
-  "black",
-];
-
-function Popup({
+const Popup = ({
   showInput,
   handleAddOrEdit,
   handleTagChange,
@@ -36,109 +23,106 @@ function Popup({
   setNewItem,
   setShowInput,
   editingId,
+  setEditingId,
+  setNewCategory,
   handleDeleteTag,
-}) {
-  const [selectedColor, setSelectedColor] = useState(
-    tagColors[selectedTag] || predefinedColors[0]
-  );
+}) => {
+  const dialogRef = useRef(null);
 
-  const handleColorChange = (event) => {
-    setSelectedColor(event.target.value);
+  const handleClickOutside = (event) => {
+    if (dialogRef.current && !dialogRef.current.contains(event.target)) {
+      setShowInput(false);
+      setEditingId(null);
+    }
   };
 
   return (
-    showInput && (
-      <div className="popup">
+    <div>
+      {showInput && (
         <div
-          className="popup-content"
+          className="popup"
+          onClick={handleClickOutside}
           style={{
-            padding: 16,
-            borderRadius: 4,
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
           }}
         >
-          <form onSubmit={handleAddOrEdit}>
-            <Box>
-              <Typography
-                variant="h5"
-                style={{ textAlign: "center", marginBottom: 16 }}
-              >
-                Add Your Task
-              </Typography>
+          <div
+            ref={dialogRef}
+            className="popup-content"
+            style={{
+              background: "#fff",
+              padding: "20px",
+              borderRadius: "5px",
+              boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <DialogTitle>
+              {editingId !== null ? "Edit Todo" : "Add Todo"}
+            </DialogTitle>
+            <DialogContent>
               <TextField
-                variant="outlined"
+                autoFocus
+                margin="dense"
+                id="newitem"
+                label="Task"
+                type="text"
+                fullWidth
                 value={newitem}
                 onChange={(e) => setNewItem(e.target.value)}
-                fullWidth
-                style={{ marginBottom: 5 }}
               />
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "5px",
-                }}
-              >
+              <FormControl fullWidth style={{ marginTop: "10px" }}>
+                <InputLabel id="tag-label"></InputLabel>
                 <Select
-                  renderValue={(selected) => (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <div
-                        style={{
-                          backgroundColor: selectedColor, // Use selectedColor here
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          marginRight: 10,
-                        }}
-                      />
-                      <span>{selected}</span>
-                    </div>
-                  )}
+                  labelId="tag-label"
+                  id="tag"
                   value={selectedTag}
                   onChange={handleTagChange}
-                  fullWidth
-                  variant="outlined"
-                  style={{ flex: 1, marginBottom: 5 }}
                 >
                   {tags.map((tag) => (
                     <MenuItem key={tag} value={tag}>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <span>{tag}</span>
-                      </div>
-                      <IconButton
-                        onClick={() => handleDeleteTag(tag)}
-                        color="secondary"
-                        size="small"
-                      >
-                        <CloseIcon />
-                      </IconButton>
+                      <div
+                        style={{
+                          backgroundColor: tagColors[tag],
+                          width: "10px",
+                          height: "10px",
+                          marginRight: "5px",
+                          display: "inline-block",
+                        }}
+                      ></div>
+                      {tag}
                     </MenuItem>
                   ))}
                 </Select>
-              </div>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                style={{ marginBottom: 8 }}
-              >
-                {editingId !== null ? "Save Edit" : "Add"}
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleAddOrEdit} color="primary">
+                {editingId !== null ? "Save Changes" : "Add Todo"}
               </Button>
               <Button
-                onClick={() => setShowInput(false)}
-                variant="contained"
+                onClick={() => {
+                  setShowInput(false);
+                  setEditingId(null);
+                }}
                 color="secondary"
-                fullWidth
               >
                 Cancel
               </Button>
-            </Box>
-          </form>
+            </DialogActions>
+          </div>
         </div>
-      </div>
-    )
+      )}
+    </div>
   );
-}
+};
 
 export default Popup;

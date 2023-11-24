@@ -67,9 +67,10 @@ function TodoList() {
   const [newCategory, setNewCategory] = useState("");
   const [tags, setTags] = useState([...initialTags]);
 
-  useEffect(() => localStorage.setItem("todos", JSON.stringify(todos)), [
-    todos,
-  ]);
+  useEffect(
+    () => localStorage.setItem("todos", JSON.stringify(todos)),
+    [todos]
+  );
 
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
@@ -127,12 +128,6 @@ function TodoList() {
 
   const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
 
-  const handleAddCategory = () => {
-    if (!newCategory.trim()) return;
-    setTags([...tags, newCategory]);
-    setNewCategory("");
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -141,10 +136,15 @@ function TodoList() {
           onClick={() => setShowInput(!showInput)}
           variant="contained"
           color="primary"
-          style={{ marginTop: 10, width: "760px", left: "4.8%" }}
+          sx={{
+            marginTop: { xs: 2, md: 3 },
+            width: { xs: "100%", sm: "50%", md: "40%", lg: "30%", xl: "770px" },
+            marginLeft: { xs: 0, md: "3%" },
+          }}
         >
           {showInput ? "Cancel" : "Add"}
         </Button>
+
         <Popup
           showInput={showInput}
           handleAddOrEdit={handleAddOrEdit}
@@ -166,18 +166,27 @@ function TodoList() {
               key={todo.id}
               className={`todo-item${todo.completed ? " completed" : ""}`}
               title={todo.title.length > 40 ? todo.title : null}
-              style={{ marginBottom: "10px", width: "760px" }}
+              style={{
+                marginBottom: "10px",
+                width: "100%", // Set width to 100% by default
+                maxWidth: "760px", // Set maximum width to 760px
+                marginLeft: "auto", // Align to the right
+                marginRight: "auto", // Align to the left
+                boxSizing: "border-box", // Include padding and border in the element's total width and height
+                background: todo.completed ? "#ddd" : "inherit",
+              }}
             >
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  width: "650px",
+                  width: "670px",
                 }}
               >
                 <Checkbox
                   checked={todo.completed}
                   onChange={() => handleToggleTodo(todo.id)}
+                  style={{ color: todo.completed ? "green" : "inherit" }}
                 />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center" }}>
@@ -206,20 +215,37 @@ function TodoList() {
                     alignItems: "center",
                     position: "relative",
                     left: "70px",
+                    "@media (max-width: 760px)": {
+                      left: 0,
+                      justifyContent: "flex-end",
+                      marginTop: "10px",
+                      width: "100%",
+                      boxSizing: "border-box",
+                    },
                   }}
                 >
-                  <IconButton
-                    onClick={() => handleEdit(todo.id)}
-                    color="primary"
+                  <div
+                    style={{
+                      marginLeft: "auto",
+                      display: "flex",
+                      gap: "10px",
+                      position: "relative",
+                      right: "50px", // Adjusted the right property here
+                    }}
                   >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => deleteTodo(todo.id)}
-                    color="secondary"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                    <IconButton
+                      onClick={() => handleEdit(todo.id)}
+                      color="primary"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => deleteTodo(todo.id)}
+                      color="secondary"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
                 </div>
               </div>
             </li>

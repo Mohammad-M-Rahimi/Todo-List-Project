@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ThemeProvider,
   CssBaseline,
@@ -17,16 +17,14 @@ import {
   Toolbar,
   Typography,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Input,
 } from "@mui/material";
 import theme from "../theme/theme";
 import AppBarComponent from "../components/Home/Appbar";
 import Tags from "../components/Home/Tags";
 import Logic from "../components/Home/Logic";
 import crypto from "crypto";
-import Input from "@mui/material/Input";
+
 const predefinedColors = [
   "red",
   "blue",
@@ -49,9 +47,9 @@ export default function Dashboard() {
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("");
-  const handleColorChange = (color) => {
-    setSelectedColor(color);
-  };
+  const [tagInput, setTagInput] = useState("");
+  const forceUpdateRef = useRef();
+  const [dialogKey, setDialogKey] = useState(0);
 
   useEffect(() => {
     const storedTags = JSON.parse(localStorage.getItem("tags"));
@@ -69,12 +67,21 @@ export default function Dashboard() {
   const handleAddCategory = () => setDialogOpen(true);
 
   const handleAddTag = () => {
-    if (newCategory.trim() === "") return;
-    const updatedTags = [...tags, newCategory];
+    if (tagInput.trim() === "") return;
+
+    setTags((prevTags) => {
+      const updatedTags = [...prevTags, tagInput];
+      updateLocalStorageTags(updatedTags);
+      return updatedTags;
+    });
+
+    setTagInput("");
+    setDialogOpen(false);
+    setDialogKey((prevKey) => prevKey + 1);
+  };
+
+  const updateLocalStorageTags = (updatedTags) => {
     localStorage.setItem("tags", JSON.stringify(updatedTags));
-    setTags(updatedTags);
-    setNewCategory("");
-    setDialogOpen(false); // Close the dialog after adding the tag
   };
 
   const handsubmit = (e) => {
@@ -136,6 +143,14 @@ export default function Dashboard() {
                     alignItems: "center",
                     flexDirection: "column",
                     height: "auto",
+                    width: "970px",
+                    maxWidth: "100%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    boxSizing: "border-box",
+                    "@media (max-width: 760px)": {
+                      width: "100%",
+                    },
                   }}
                 >
                   <Logic
@@ -191,23 +206,27 @@ export default function Dashboard() {
           </Container>
         </Box>
       </Box>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+      <Dialog
+        key={dialogKey}
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setDialogKey((prevKey) => prevKey + 1);
+        }}
+      >
         <DialogTitle>Write it Down</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ paddingBottom: "10px" }}>
             Add/delete tags
           </DialogContentText>
-
-
-
           <FormControl fullWidth style={{ marginBottom: 5 }}>
             <Input
               id="color-picker"
               type="color"
               value={selectedColor}
-              onChange={handleColorChange}
+              onChange={(e) => setSelectedColor(e.target.value)}
               inputProps={{ list: "predefinedColors" }}
-              style={{width:'55px'}}
+              style={{ width: "55px" }}
             />
             <datalist id="predefinedColors">
               {predefinedColors.map((color) => (
@@ -215,14 +234,10 @@ export default function Dashboard() {
               ))}
             </datalist>
           </FormControl>
-
-
-
-
           <TextField
             type="text"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
             sx={{ width: "100%" }}
           />
           <Tags tags={tags} handleDeleteTag={handleDeleteTag} />
