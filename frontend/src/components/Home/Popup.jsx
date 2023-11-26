@@ -35,6 +35,7 @@ const Popup = ({
       setEditingId(null);
     }
   };
+  
 
   return (
     <div>
@@ -91,7 +92,6 @@ const Popup = ({
                     <MenuItem key={tag} value={tag}>
                       <div
                         style={{
-                          backgroundColor: tagColors[tag],
                           width: "10px",
                           height: "10px",
                           marginRight: "5px",

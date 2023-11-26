@@ -29,43 +29,16 @@ const theme = createTheme({
   shape: { borderRadius: 18 },
 });
 
-const predefinedColors = [
-  "#FF5733",
-  "#FFC300",
-  "#33FF57",
-  "#338CFF",
-  "#B633FF",
-  "#FF3362",
-  "#33FFE6",
-  "#8CFF33",
-  "#FF33A6",
-];
-
-const getRandomColor = () =>
-  predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
-
-const initialTags = JSON.parse(localStorage.getItem("tags")) || [
-  "Work",
-  "Gym",
-  "Study",
-];
-const tagColors = Object.fromEntries(
-  initialTags.map((tag, index) => [
-    tag,
-    predefinedColors[index % predefinedColors.length],
-  ])
-);
-
 function TodoList() {
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || []
   );
   const [newitem, setNewItem] = useState("");
-  const [selectedTag, setSelectedTag] = useState(initialTags[0]);
+  const [selectedTag, setSelectedTag] = useState("Work");
   const [editingId, setEditingId] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [newCategory, setNewCategory] = useState("");
-  const [tags, setTags] = useState([...initialTags]);
+  const [tags, setTags] = useState(["Work", "Gym", "Study"]);
 
   useEffect(
     () => localStorage.setItem("todos", JSON.stringify(todos)),
@@ -150,7 +123,6 @@ function TodoList() {
           handleAddOrEdit={handleAddOrEdit}
           handleTagChange={handleTagChange}
           tags={tags}
-          tagColors={tagColors}
           selectedTag={selectedTag}
           newitem={newitem}
           setNewItem={setNewItem}
@@ -201,12 +173,7 @@ function TodoList() {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    <Typography
-                      variant="caption"
-                      style={{ color: tagColors[todo.tag] }}
-                    >
-                      {todo.tag}
-                    </Typography>
+                    <Typography variant="caption">{todo.tag}</Typography>
                   </div>
                 </div>
                 <div
