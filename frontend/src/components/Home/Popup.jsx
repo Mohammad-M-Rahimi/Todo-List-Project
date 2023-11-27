@@ -35,7 +35,6 @@ const Popup = ({
       setEditingId(null);
     }
   };
-  
 
   return (
     <div>
@@ -87,6 +86,7 @@ const Popup = ({
                   id="tag"
                   value={selectedTag}
                   onChange={handleTagChange}
+                  onClose={(event) => event.stopPropagation()}
                 >
                   {tags.map((tag) => (
                     <MenuItem key={tag} value={tag}>

@@ -67,14 +67,14 @@ export default function Dashboard() {
   const handleAddCategory = () => setDialogOpen(true);
   const handleAddTag = () => {
     if (tagInput.trim() === "") return;
-  
+
     // Create a copy of the existing tags and add the new tag
     const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
-  
+
     // Update the state and store in local storage
     setTags(updatedTags);
     localStorage.setItem("tags", JSON.stringify(updatedTags));
-  
+
     // Clear the input and close the dialog
     setTagInput("");
     setDialogOpen(false);
@@ -208,57 +208,59 @@ export default function Dashboard() {
         </Box>
       </Box>
       <Dialog
-  key={dialogKey}
-  open={dialogOpen}
-  onClose={() => {
-    setDialogOpen(false);
-    setDialogKey((prevKey) => prevKey + 1);
-  }}
->
-  <DialogTitle>Write it Down</DialogTitle>
-  <DialogContent>
-    <DialogContentText style={{ paddingBottom: "10px" }}>
-      Add/delete tags
-    </DialogContentText>
-    <FormControl fullWidth style={{ marginBottom: 5 }}>
-  <Input
-    id="color-picker"
-    type="color"
-    value={selectedColor}
-    onChange={(e) => setSelectedColor(e.target.value)}
-    inputProps={{ list: "predefinedColors" }}
-    style={{ width: "55px" }}
-  />
-  <datalist id="predefinedColors">
-    {predefinedColors.map((color) => (
-      color.toLowerCase() !== "white" && (
-        <option key={color} value={color} />
-      )
-    ))}
-  </datalist>
-</FormControl>
+        key={dialogKey}
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setDialogKey((prevKey) => prevKey + 1);
+        }}
+      >
+        <DialogTitle>Write it Down</DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ paddingBottom: "10px" }}>
+            Add/delete tags
+          </DialogContentText>
+          <FormControl fullWidth style={{ marginBottom: 5 }}>
+            <Input
+              id="color-picker"
+              type="color"
+              value={selectedColor}
+              onChange={(e) => setSelectedColor(e.target.value)}
+              inputProps={{ list: "predefinedColors" }}
+              style={{ width: "55px" }}
+            />
+            <datalist id="predefinedColors">
+              {predefinedColors.map(
+                (color) =>
+                  color.toLowerCase() !== "white" && (
+                    <option key={color} value={color} />
+                  )
+              )}
+            </datalist>
+          </FormControl>
 
-    <TextField
-      type="text"
-      value={tagInput}
-      onChange={(e) => setTagInput(e.target.value)}
-      sx={{ width: "100%" }}
-    />
-    <Tags
-      tags={tags}
-      handleDeleteTag={handleDeleteTag}
-      tagBackgroundColor={selectedColor} // Pass selectedColor here
-    />
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleAddTag} color="primary">
-      Add Tag
-    </Button>
-    <Button onClick={() => setDialogOpen(false)} color="secondary">
-      Cancel
-    </Button>
-  </DialogActions>
-</Dialog>
+          <TextField
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            sx={{ width: "100%" }}
+          />
+          <Tags
+            tags={tags}
+            handleDeleteTag={handleDeleteTag}
+            tagBackgroundColor={selectedColor}
+            insideDialog={true} // Pass the prop
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddTag} color="primary">
+            Add Tag
+          </Button>
+          <Button onClick={() => setDialogOpen(false)} color="secondary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 }
