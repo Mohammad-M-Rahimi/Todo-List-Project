@@ -1,3 +1,4 @@
+// Popup.jsx
 import React, { useRef } from "react";
 import {
   Dialog,
@@ -11,6 +12,8 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Popup = ({
   showInput,
@@ -34,6 +37,11 @@ const Popup = ({
       setShowInput(false);
       setEditingId(null);
     }
+  };
+
+  const handleButtonClick = () => {
+    handleAddOrEdit();
+    toast.success(`Task "${newitem}" ${editingId !== null ? "Updated" : "Added"}`);
   };
 
   return (
@@ -105,7 +113,7 @@ const Popup = ({
               </FormControl>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleAddOrEdit} color="primary">
+              <Button onClick={handleButtonClick} color="primary">
                 {editingId !== null ? "Save Changes" : "Add Todo"}
               </Button>
               <Button
@@ -121,6 +129,7 @@ const Popup = ({
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

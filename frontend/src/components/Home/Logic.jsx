@@ -16,6 +16,10 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import Popup from "./Popup";
+import NotificationButton from "./Notification";
+import { ToastContainer } from "react-toastify";
+// Logic.jsx
+import "react-toastify/dist/ReactToastify.css";
 
 const theme = createTheme({
   palette: {
@@ -47,9 +51,7 @@ function TodoList() {
 
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
-  const handleAddOrEdit = (e) => {
-    e.preventDefault();
-
+  const handleAddOrEdit = () => {
     if (!newitem.trim() || newitem.length > 30) return;
 
     const updatedTodos =
@@ -101,6 +103,11 @@ function TodoList() {
 
   const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
 
+  const showNotification = (message) => {
+    // Implement your notification logic here
+    alert(message);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -117,7 +124,6 @@ function TodoList() {
         >
           {showInput ? "Cancel" : "Add"}
         </Button>
-
         <Popup
           showInput={showInput}
           handleAddOrEdit={handleAddOrEdit}
@@ -131,7 +137,10 @@ function TodoList() {
           setEditingId={setEditingId}
           setNewCategory={setNewCategory}
           handleDeleteTag={handleDeleteTag}
+          showNotification={showNotification}
         />
+        <NotificationButton />
+        <ToastContainer />
         <ul>
           {todos.map((todo) => (
             <li
@@ -140,11 +149,11 @@ function TodoList() {
               title={todo.title.length > 40 ? todo.title : null}
               style={{
                 marginBottom: "10px",
-                width: "100%", // Set width to 100% by default
-                maxWidth: "760px", // Set maximum width to 760px
-                marginLeft: "auto", // Align to the right
-                marginRight: "auto", // Align to the left
-                boxSizing: "border-box", // Include padding and border in the element's total width and height
+                width: "100%",
+                maxWidth: "760px",
+                marginLeft: "auto",
+                marginRight: "auto",
+                boxSizing: "border-box",
                 background: todo.completed ? "#ddd" : "inherit",
               }}
             >
@@ -197,7 +206,7 @@ function TodoList() {
                       display: "flex",
                       gap: "10px",
                       position: "relative",
-                      right: "50px", // Adjusted the right property here
+                      right: "50px",
                     }}
                   >
                     <IconButton
