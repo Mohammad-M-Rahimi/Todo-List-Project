@@ -15,7 +15,11 @@ import {
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
-import Popup from "../Home/Popups";
+import Popup from "./Popup";
+import NotificationButton from "./Notification";
+import { ToastContainer } from "react-toastify";
+// Logic.jsx
+import "react-toastify/dist/ReactToastify.css";
 
 const theme = createTheme({
   palette: {
@@ -29,53 +33,25 @@ const theme = createTheme({
   shape: { borderRadius: 18 },
 });
 
-const predefinedColors = [
-  "#FF5733",
-  "#FFC300",
-  "#33FF57",
-  "#338CFF",
-  "#B633FF",
-  "#FF3362",
-  "#33FFE6",
-  "#8CFF33",
-  "#FF33A6",
-];
-
-const getRandomColor = () =>
-  predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
-
-const initialTags = JSON.parse(localStorage.getItem("tags")) || [
-  "Work",
-  "Gym",
-  "Study",
-];
-const tagColors = Object.fromEntries(
-  initialTags.map((tag, index) => [
-    tag,
-    predefinedColors[index % predefinedColors.length],
-  ])
-);
-
 function TodoList() {
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || []
   );
   const [newitem, setNewItem] = useState("");
-  const [selectedTag, setSelectedTag] = useState(initialTags[0]);
+  const [selectedTag, setSelectedTag] = useState("Work");
   const [editingId, setEditingId] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [newCategory, setNewCategory] = useState("");
-  const [tags, setTags] = useState([...initialTags]);
+  const [tags, setTags] = useState(["Work", "Gym", "Study"]);
 
-  useEffect(() => localStorage.setItem("todos", JSON.stringify(todos)), [
-    todos,
-  ]);
+  useEffect(
+    () => localStorage.setItem("todos", JSON.stringify(todos)),
+    [todos]
+  );
 
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
-  const handleAddOrEdit = (e) => {
-    e.preventDefault();
-
+  const handleAddOrEdit = () => {
     if (!newitem.trim() || newitem.length > 30) return;
 
     const updatedTodos =
@@ -127,10 +103,9 @@ function TodoList() {
 
   const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
 
-  const handleAddCategory = () => {
-    if (!newCategory.trim()) return;
-    setTags([...tags, newCategory]);
-    setNewCategory("");
+  const showNotification = (message) => {
+    // Implement your notification logic here
+    alert(message);
   };
 
   return (
@@ -141,7 +116,11 @@ function TodoList() {
           onClick={() => setShowInput(!showInput)}
           variant="contained"
           color="primary"
-          style={{ marginTop: 10, width: "760px", left: "4.8%" }}
+          sx={{
+            marginTop: { xs: 2, md: 3 },
+            width: { xs: "100%", sm: "50%", md: "40%", lg: "30%", xl: "770px" },
+            marginLeft: { xs: 0, md: "3%" },
+          }}
         >
           {showInput ? "Cancel" : "Add"}
         </Button>
@@ -150,7 +129,6 @@ function TodoList() {
           handleAddOrEdit={handleAddOrEdit}
           handleTagChange={handleTagChange}
           tags={tags}
-          tagColors={tagColors}
           selectedTag={selectedTag}
           newitem={newitem}
           setNewItem={setNewItem}
@@ -159,25 +137,37 @@ function TodoList() {
           setEditingId={setEditingId}
           setNewCategory={setNewCategory}
           handleDeleteTag={handleDeleteTag}
+          showNotification={showNotification}
         />
+        <NotificationButton />
+        <ToastContainer />
         <ul>
           {todos.map((todo) => (
             <li
               key={todo.id}
               className={`todo-item${todo.completed ? " completed" : ""}`}
               title={todo.title.length > 40 ? todo.title : null}
-              style={{ marginBottom: "10px", width: "760px" }}
+              style={{
+                marginBottom: "10px",
+                width: "100%",
+                maxWidth: "760px",
+                marginLeft: "auto",
+                marginRight: "auto",
+                boxSizing: "border-box",
+                background: todo.completed ? "#ddd" : "inherit",
+              }}
             >
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  width: "650px",
+                  width: "670px",
                 }}
               >
                 <Checkbox
                   checked={todo.completed}
                   onChange={() => handleToggleTodo(todo.id)}
+                  style={{ color: todo.completed ? "green" : "inherit" }}
                 />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center" }}>
@@ -192,12 +182,7 @@ function TodoList() {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    <Typography
-                      variant="caption"
-                      style={{ color: tagColors[todo.tag] }}
-                    >
-                      {todo.tag}
-                    </Typography>
+                    <Typography variant="caption">{todo.tag}</Typography>
                   </div>
                 </div>
                 <div
@@ -206,20 +191,37 @@ function TodoList() {
                     alignItems: "center",
                     position: "relative",
                     left: "70px",
+                    "@media (max-width: 760px)": {
+                      left: 0,
+                      justifyContent: "flex-end",
+                      marginTop: "10px",
+                      width: "100%",
+                      boxSizing: "border-box",
+                    },
                   }}
                 >
-                  <IconButton
-                    onClick={() => handleEdit(todo.id)}
-                    color="primary"
+                  <div
+                    style={{
+                      marginLeft: "auto",
+                      display: "flex",
+                      gap: "10px",
+                      position: "relative",
+                      right: "50px",
+                    }}
                   >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => deleteTodo(todo.id)}
-                    color="secondary"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                    <IconButton
+                      onClick={() => handleEdit(todo.id)}
+                      color="primary"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => deleteTodo(todo.id)}
+                      color="secondary"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
                 </div>
               </div>
             </li>
