@@ -1,13 +1,7 @@
-// NotificationButton.jsx
-import React from "react";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
-const NotificationButton = () => {
-  const handleButtonClick = () => {
-    toast.success("Notification from button click!");
-  };
+const Notification = () => {
 
   return (
     <div>
@@ -16,4 +10,4 @@ const NotificationButton = () => {
   );
 };
 
-export default NotificationButton;
+export default Notification;

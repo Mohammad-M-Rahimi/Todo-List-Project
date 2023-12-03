@@ -1,5 +1,4 @@
-// Sidebar.js
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   IconButton,
   Drawer,
@@ -33,7 +32,6 @@ const Sidebar = () => {
             <ListItemIcon>{/* Add your icon here */}</ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          {/* Add more items as needed */}
         </List>
       </Drawer>
     </>

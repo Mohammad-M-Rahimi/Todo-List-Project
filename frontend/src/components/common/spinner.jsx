@@ -14,7 +14,7 @@ function Spinner() {
   return (
     <SpinnerContainer>
       <CircularProgress style={{ color: Theme.palette.secondary.main }} />{" "}
-    </SpinnerContainer>
+    </SpinnerContainer> 
   );
 }
 

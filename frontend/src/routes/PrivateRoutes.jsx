@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import isAuthenticated from "../service/isAuthenticated";
-import Spinner from "../components/common/spinner";
+import Spinner from "../components/common/Spinner";
 
 function PrivateRoute({ component: Component, ...rest }) {
   const [authState, setAuthState] = useState(null);

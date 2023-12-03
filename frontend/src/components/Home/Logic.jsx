@@ -1,43 +1,25 @@
-// TodoList.js
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
-  createTheme,
   ThemeProvider,
   CssBaseline,
   Box,
   Typography,
-  TextField,
   Button,
   Checkbox,
   IconButton,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-
+import theme from '../../theme/theme';
 import Popup from "./Popup";
-import NotificationButton from "./Notification";
+import Notification from "./Notification";
 import { ToastContainer } from "react-toastify";
-// Logic.jsx
 import "react-toastify/dist/ReactToastify.css";
 
-const theme = createTheme({
-  palette: {
-    mode: "light",
-    primary: { main: "#E25E3E" },
-    secondary: { main: "#FF9B50" },
-    background: { default: "#ffff" },
-    text: { primary: "#C63D2F" },
-  },
-  typography: { fontFamily: "Roboto, Arial, sans-serif" },
-  shape: { borderRadius: 18 },
-});
+const Theme = theme;
 
 function TodoList() {
-  const [todos, setTodos] = useState(
-    JSON.parse(localStorage.getItem("todos")) || []
-  );
-  const [newitem, setNewItem] = useState("");
+  const [todos, setTodos] = useState(JSON.parse(localStorage.getItem("todos")) || []);
+  const [newItem, setnewItem] = useState("");
   const [selectedTag, setSelectedTag] = useState("Work");
   const [editingId, setEditingId] = useState(null);
   const [showInput, setShowInput] = useState(false);
@@ -52,20 +34,20 @@ function TodoList() {
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
   const handleAddOrEdit = () => {
-    if (!newitem.trim() || newitem.length > 30) return;
+    if (!newItem.trim() || newItem.length > 30) return;
 
     const updatedTodos =
       editingId !== null
         ? todos.map((todo) =>
             todo.id === editingId
-              ? { ...todo, title: newitem, tag: selectedTag }
+              ? { ...todo, title: newItem, tag: selectedTag }
               : todo
           )
         : [
             ...todos,
             {
               id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 1,
-              title: newitem,
+              title: newItem,
               completed: false,
               tag: selectedTag,
             },
@@ -73,14 +55,14 @@ function TodoList() {
 
     setTodos(updatedTodos);
     setEditingId(null);
-    setNewItem("");
+    setnewItem("");
     setShowInput(false);
   };
 
   const handleEdit = (id) => {
     const taskToEdit = todos.find((todo) => todo.id === id);
     if (taskToEdit) {
-      setNewItem(taskToEdit.title);
+      setnewItem(taskToEdit.title);
       setSelectedTag(taskToEdit.tag);
       setEditingId(id);
       setShowInput(true);
@@ -109,7 +91,7 @@ function TodoList() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <CssBaseline />
       <Box>
         <Button
@@ -130,8 +112,8 @@ function TodoList() {
           handleTagChange={handleTagChange}
           tags={tags}
           selectedTag={selectedTag}
-          newitem={newitem}
-          setNewItem={setNewItem}
+          newItem={newItem}
+          setnewItem={setnewItem}
           setShowInput={setShowInput}
           editingId={editingId}
           setEditingId={setEditingId}
@@ -139,7 +121,7 @@ function TodoList() {
           handleDeleteTag={handleDeleteTag}
           showNotification={showNotification}
         />
-        <NotificationButton />
+        <Notification />
         <ToastContainer />
         <ul>
           {todos.map((todo) => (

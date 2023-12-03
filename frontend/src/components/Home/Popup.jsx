@@ -1,7 +1,5 @@
-// Popup.jsx
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
-  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -20,15 +18,12 @@ const Popup = ({
   handleAddOrEdit,
   handleTagChange,
   tags,
-  tagColors,
   selectedTag,
   newitem,
   setNewItem,
   setShowInput,
   editingId,
-  setEditingId,
-  setNewCategory,
-  handleDeleteTag,
+  setEditingId
 }) => {
   const dialogRef = useRef(null);
 

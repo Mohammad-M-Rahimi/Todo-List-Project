@@ -1,4 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+// Use Reducer for handlers
+// Make the code more readable
+
+import { useState, useEffect} from "react";
 import {
   ThemeProvider,
   CssBaseline,
@@ -38,16 +41,17 @@ const predefinedColors = [
 
 const Theme = theme;
 
-export default function Dashboard() {
+export default function Home() {
+
+  const newCategory = "";
+  
   const [open, setOpen] = useState(true);
-  const [newitem, setNewItem] = useState("");
+  const [newItem, setNewItem] = useState("");
   const [todos, setTodos] = useState([]);
-  const [newCategory, setNewCategory] = useState("");
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const forceUpdateRef = useRef();
   const [dialogKey, setDialogKey] = useState(0);
 
   useEffect(() => {
@@ -80,15 +84,11 @@ export default function Dashboard() {
     setDialogKey((prevKey) => prevKey + 1);
   };
 
-  const updateLocalStorageTags = (updatedTags) => {
-    localStorage.setItem("tags", JSON.stringify(updatedTags));
-  };
-
   const handsubmit = (e) => {
     e.preventDefault();
     setTodos((currentTodos) => [
       ...currentTodos,
-      { id: crypto.randomUUID(), title: newitem, completed: false },
+      { id: crypto.randomUUID(), title: newItem, completed: false },
     ]);
     setNewItem("");
   };
@@ -155,8 +155,8 @@ export default function Dashboard() {
                 >
                   <Logic
                     todos={todos}
-                    newitem={newitem}
-                    setNewItem={setNewItem}
+                    newItem={newItem}
+                    setnewItem={setNewItem}
                     setTodos={setTodos}
                     handsubmit={handsubmit}
                     toggleTodo={toggleTodo}
@@ -248,7 +248,7 @@ export default function Dashboard() {
             tags={tags}
             handleDeleteTag={handleDeleteTag}
             tagBackgroundColor={selectedColor}
-            insideDialog={true} // Pass the prop
+            insideDialog={true}
           />
         </DialogContent>
         <DialogActions>

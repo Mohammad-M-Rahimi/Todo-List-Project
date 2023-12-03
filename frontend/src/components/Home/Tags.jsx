@@ -1,5 +1,3 @@
-// Tags.jsx
-import React from "react";
 import { Chip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 

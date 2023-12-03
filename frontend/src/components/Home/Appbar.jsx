@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AppBar,
   Toolbar,
@@ -12,7 +11,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
 
-export default function AppBarComponent({ open, toggleDrawer, handleLogout }) {
+export default function AppBarComponent({ toggleDrawer, handleLogout }) {
   return (
     <AppBar position="absolute">
       <Toolbar>
