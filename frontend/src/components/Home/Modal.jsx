@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import {
   DialogTitle,
   DialogContent,
@@ -10,20 +10,22 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import styles from "./style/Modalstyle"; // Updated import
 
-const Popup = ({
+const Modal = ({
   showInput,
   handleAddOrEdit,
   handleTagChange,
   tags,
   selectedTag,
-  newitem,
-  setNewItem,
+  newItem,
+  setnewItem,
   setShowInput,
   editingId,
-  setEditingId
+  setEditingId,
+  setNewCategory,
+  handleDeleteTag,
+  styles, // Updated prop
 }) => {
   const dialogRef = useRef(null);
 
@@ -36,37 +38,19 @@ const Popup = ({
 
   const handleButtonClick = () => {
     handleAddOrEdit();
-    toast.success(`Task "${newitem}" ${editingId !== null ? "Updated" : "Added"}`);
   };
 
   return (
     <div>
       {showInput && (
         <div
-          className="popup"
+          ref={dialogRef}
           onClick={handleClickOutside}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0, 0, 0, 0.5)",
-            zIndex: 999,
-          }}
+          style={styles.modal} // Use the overlay style
         >
           <div
-            ref={dialogRef}
             className="popup-content"
-            style={{
-              background: "#fff",
-              padding: "20px",
-              borderRadius: "5px",
-              boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-            }}
+            style={styles.modalContent} // Use the content style
           >
             <DialogTitle>
               {editingId !== null ? "Edit Todo" : "Add Todo"}
@@ -79,9 +63,10 @@ const Popup = ({
                 label="Task"
                 type="text"
                 fullWidth
-                value={newitem}
-                onChange={(e) => setNewItem(e.target.value)}
+                value={newItem} // Corrected variable name
+                onChange={(e) => setnewItem(e.target.value)}
               />
+
               <FormControl fullWidth style={{ marginTop: "10px" }}>
                 <InputLabel id="tag-label"></InputLabel>
                 <Select
@@ -124,9 +109,8 @@ const Popup = ({
           </div>
         </div>
       )}
-      <ToastContainer />
     </div>
   );
 };
 
-export default Popup;
+export default Modal;

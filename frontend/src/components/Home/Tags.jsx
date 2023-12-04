@@ -1,7 +1,9 @@
-import { Chip } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+// Tags.jsx
+import React from 'react';
+import Chip from '@mui/material/Chip';
+import CloseIcon from '@mui/icons-material/Close';
 
-export default function Tags({ tags, handleDeleteTag, insideDialog }) {
+const Tags = ({ tags, handleDeleteTag, insideDialog }) => {
   return (
     <div>
       {tags.map(({ tag, color }) => (
@@ -12,14 +14,23 @@ export default function Tags({ tags, handleDeleteTag, insideDialog }) {
           color="primary"
           variant="outlined"
           style={{
-            margin: "4px",
-            background: color || "black", // Use the tag's color or default to black
-            color: "white",
-            borderColor: "#E25E3E",
+            margin: '4px',
+            background: color || 'black',
+            color: 'white',
+            borderColor: '#E25E3E',
           }}
-          deleteIcon={insideDialog ? null : <CloseIcon style={{ color: "#fff" }} />}
+          deleteIcon={
+            insideDialog ? null : (
+              <CloseIcon
+                style={{ color: '#fff' }}
+                onClick={() => handleDeleteTag(tag)}
+              />
+            )
+          }
         />
       ))}
     </div>
   );
-}
+};
+
+export default Tags;

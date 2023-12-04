@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ThemeProvider,
   CssBaseline,
@@ -9,16 +9,17 @@ import {
   IconButton,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import theme from '../../theme/theme';
-import Popup from "./Popup";
-import Notification from "./Notification";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import theme from "../../theme/theme";
+
+import Modal from "./Modal"; // Updated import
+import styles from "./style/Modalstyle"; // Updated import
 
 const Theme = theme;
 
 function TodoList() {
-  const [todos, setTodos] = useState(JSON.parse(localStorage.getItem("todos")) || []);
+  const [todos, setTodos] = useState(
+    JSON.parse(localStorage.getItem("todos")) || []
+  );
   const [newItem, setnewItem] = useState("");
   const [selectedTag, setSelectedTag] = useState("Work");
   const [editingId, setEditingId] = useState(null);
@@ -85,11 +86,6 @@ function TodoList() {
 
   const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
 
-  const showNotification = (message) => {
-    // Implement your notification logic here
-    alert(message);
-  };
-
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
@@ -106,7 +102,7 @@ function TodoList() {
         >
           {showInput ? "Cancel" : "Add"}
         </Button>
-        <Popup
+        <Modal
           showInput={showInput}
           handleAddOrEdit={handleAddOrEdit}
           handleTagChange={handleTagChange}
@@ -119,10 +115,8 @@ function TodoList() {
           setEditingId={setEditingId}
           setNewCategory={setNewCategory}
           handleDeleteTag={handleDeleteTag}
-          showNotification={showNotification}
+          styles={styles} // pass styles as prop
         />
-        <Notification />
-        <ToastContainer />
         <ul>
           {todos.map((todo) => (
             <li
@@ -130,13 +124,17 @@ function TodoList() {
               className={`todo-item${todo.completed ? " completed" : ""}`}
               title={todo.title.length > 40 ? todo.title : null}
               style={{
-                marginBottom: "10px",
-                width: "100%",
-                maxWidth: "760px",
-                marginLeft: "auto",
-                marginRight: "auto",
-                boxSizing: "border-box",
-                background: todo.completed ? "#ddd" : "inherit",
+                ...styles.todoItem,
+                ...(todo.completed ? styles.completedTodoItem : {}),
+                ...(todo.completed ? { background: "#ddd" } : {}),
+                ...{
+                  marginBottom: "10px",
+                  width: "100%",
+                  maxWidth: "760px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  boxSizing: "border-box",
+                },
               }}
             >
               <div
@@ -210,40 +208,6 @@ function TodoList() {
           ))}
         </ul>
       </Box>
-      <style>
-        {`
-          .todo-item {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            height: 70px;
-            width: 650px;
-          }
-          .todo-item.completed {
-            text-decoration: line-through;
-          }
-          .popup {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-          }
-          .popup-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-          }
-        `}
-      </style>
     </ThemeProvider>
   );
 }
