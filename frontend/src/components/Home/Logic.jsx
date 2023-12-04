@@ -12,7 +12,7 @@ import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import theme from "../../theme/theme";
 
 import Modal from "./Modal"; // Updated import
-import styles from "./style/Modalstyle"; // Updated import
+import styles from "./style/ModalStyle"; // Updated import
 
 const Theme = theme;
 

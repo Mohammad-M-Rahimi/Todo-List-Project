@@ -1,6 +1,5 @@
 // TagDialog.jsx
-import React from "react";
-import Tags from "../Home/Tags";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -33,22 +32,27 @@ const TagDialog = ({
   setSelectedColor,
   tagInput,
   setTagInput,
-  tags,
   handleDeleteTagWrapper,
   handleAddTagWrapper,
 }) => {
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    // Set an initial color when the component mounts
+    if (!initialized) {
+      setSelectedColor(predefinedColors[0] || "#000000"); // Use hex code for black
+      setInitialized(true);
+    }
+  }, [initialized, setSelectedColor]);
+
   const handleAddTag = () => {
     if (tagInput.trim() === "") {
       // Prevent adding empty tags
       return;
     }
 
-    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
     // Assuming you want to add the new tag to the state
     handleAddTagWrapper(tagInput, selectedColor);
-
-    // Save tags to local storage
-    localStorage.setItem("tags", JSON.stringify(updatedTags));
 
     // Close the dialog and clear the input
     setDialogOpen(false);
@@ -92,12 +96,6 @@ const TagDialog = ({
           value={tagInput}
           onChange={(e) => setTagInput(e.target.value)}
           sx={{ width: "100%" }}
-        />
-        <Tags
-          tags={tags}
-          handleDeleteTag={handleDeleteTagWrapper}
-          tagBackgroundColor={selectedColor}
-          insideDialog={true}
         />
       </DialogContent>
       <DialogActions>

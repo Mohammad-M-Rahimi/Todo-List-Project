@@ -10,7 +10,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import styles from "./style/Modalstyle"; // Updated import
+import styles from "./style/ModalStyle"; // Updated import
 
 const Modal = ({
   showInput,
