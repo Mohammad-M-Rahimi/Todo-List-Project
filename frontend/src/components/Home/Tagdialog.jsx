@@ -1,6 +1,6 @@
 // TagDialog.jsx
-import React from 'react';
-import Tags from '../Home/Tags';
+import React from "react";
+import Tags from "../Home/Tags";
 import {
   Dialog,
   DialogTitle,
@@ -11,18 +11,18 @@ import {
   TextField,
   DialogActions,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 
 const predefinedColors = [
-  'red',
-  'blue',
-  'lightblue',
-  'yellow',
-  'orange',
-  'green',
-  'purple',
-  'pink',
-  'black',
+  "red",
+  "blue",
+  "lightblue",
+  "yellow",
+  "orange",
+  "green",
+  "purple",
+  "pink",
+  "black",
 ];
 
 const TagDialog = ({
@@ -38,7 +38,7 @@ const TagDialog = ({
   handleAddTagWrapper,
 }) => {
   const handleAddTag = () => {
-    if (tagInput.trim() === '') {
+    if (tagInput.trim() === "") {
       // Prevent adding empty tags
       return;
     }
@@ -47,9 +47,12 @@ const TagDialog = ({
     // Assuming you want to add the new tag to the state
     handleAddTagWrapper(tagInput, selectedColor);
 
+    // Save tags to local storage
+    localStorage.setItem("tags", JSON.stringify(updatedTags));
+
     // Close the dialog and clear the input
     setDialogOpen(false);
-    setTagInput('');
+    setTagInput("");
   };
 
   return (
@@ -62,7 +65,7 @@ const TagDialog = ({
     >
       <DialogTitle>Write it Down</DialogTitle>
       <DialogContent>
-        <DialogContentText style={{ paddingBottom: '10px' }}>
+        <DialogContentText style={{ paddingBottom: "10px" }}>
           Add/delete tags
         </DialogContentText>
         <FormControl fullWidth style={{ marginBottom: 5 }}>
@@ -71,13 +74,13 @@ const TagDialog = ({
             type="color"
             value={selectedColor}
             onChange={(e) => setSelectedColor(e.target.value)}
-            inputProps={{ list: 'predefinedColors' }}
-            style={{ width: '55px' }}
+            inputProps={{ list: "predefinedColors" }}
+            style={{ width: "55px" }}
           />
           <datalist id="predefinedColors">
             {predefinedColors.map(
               (color) =>
-                color.toLowerCase() !== 'white' && (
+                color.toLowerCase() !== "white" && (
                   <option key={color} value={color} />
                 )
             )}
@@ -88,7 +91,7 @@ const TagDialog = ({
           type="text"
           value={tagInput}
           onChange={(e) => setTagInput(e.target.value)}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         />
         <Tags
           tags={tags}
