@@ -1,0 +1,59 @@
+/* Base styles */
+.todo-item {
+  margin-bottom: 10px;
+  width: 100%;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* Completed styles */
+.todo-item.completed {
+  background: #ddd;
+}
+
+/* Container styles */
+.todo-item .container {
+  display: flex;
+  align-items: center;
+  width: 670px;
+}
+
+/* Checkbox styles */
+.todo-item .checkbox {
+  color: inherit;
+}
+
+/* Actions container styles */
+.todo-item .actions-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  left: 70px;
+}
+
+/* Responsive styles for actions container */
+@media (max-width: 760px) {
+  .todo-item .actions-container {
+    left: 0;
+    justify-content: flex-end;
+    margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Actions styles */
+.todo-item .actions {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  position: relative;
+  right: 50px;
+}
+
+/* Completed todo item styles */
+.todo-item.completedTodoItem {
+  background: #ddd;
+}

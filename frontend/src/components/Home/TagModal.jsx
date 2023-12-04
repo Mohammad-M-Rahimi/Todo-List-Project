@@ -1,6 +1,4 @@
-// TagDialog.jsx
-import React from "react";
-import Tags from "../Home/Tags";
+import Tag from "./Tag";
 import {
   Dialog,
   DialogTitle,
@@ -25,7 +23,7 @@ const predefinedColors = [
   "black",
 ];
 
-const TagDialog = ({
+const TagModal = ({
   dialogKey,
   dialogOpen,
   setDialogOpen,
@@ -93,7 +91,7 @@ const TagDialog = ({
           onChange={(e) => setTagInput(e.target.value)}
           sx={{ width: "100%" }}
         />
-        <Tags
+        <Tag
           tags={tags}
           handleDeleteTag={handleDeleteTagWrapper}
           tagBackgroundColor={selectedColor}
@@ -112,4 +110,4 @@ const TagDialog = ({
   );
 };
 
-export default TagDialog;
+export default TagModal;

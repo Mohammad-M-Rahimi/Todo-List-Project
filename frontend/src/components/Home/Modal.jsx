@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
   DialogTitle,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import styles from "./style/Modalstyle"; // Updated import
+import "./style/ModalStyle.css";
 
 const Modal = ({
   showInput,
@@ -23,9 +23,7 @@ const Modal = ({
   setShowInput,
   editingId,
   setEditingId,
-  setNewCategory,
-  handleDeleteTag,
-  styles, // Updated prop
+  styles,
 }) => {
   const dialogRef = useRef(null);
 

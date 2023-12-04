@@ -1,0 +1,37 @@
+/* Todo Item styles */
+.todo-item {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  width: 650px;
+}
+
+/* Completed Todo Item styles */
+.todo-item.completedTodoItem {
+  text-decoration: line-through;
+}
+
+/* Modal styles */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Modal Content styles */
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

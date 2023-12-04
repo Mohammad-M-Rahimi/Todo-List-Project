@@ -1,5 +1,4 @@
-// Home.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ThemeProvider,
   CssBaseline,
@@ -13,9 +12,9 @@ import {
 } from '@mui/material';
 import theme from '../theme/theme';
 import AppBarComponent from '../components/Home/Appbar';
-import Tags from '../components/Home/Tags';
+import Tag from '../components/Home/Tag';
 import Logic from '../components/Home/Logic';
-import TagDialog from '../components/Home/Tagdialog';
+import TagModal from '../components/Home/TagModal';
 import {
   handleDeleteTag,
   toggleTodo,
@@ -23,19 +22,7 @@ import {
   handleLogout,
   handsubmit,
   handleAddTag,
-} from '../components/Home/Handler';
-
-const predefinedColors = [
-  'red',
-  'blue',
-  'lightblue',
-  'yellow',
-  'orange',
-  'green',
-  'purple',
-  'pink',
-  'black',
-];
+} from '../service/Handler';
 
 const Theme = theme;
 
@@ -176,7 +163,7 @@ export default function Home() {
                       {newCategory}
                     </Typography>
                   )}
-                  <Tags tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
+                  <Tag tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
                 </Paper>
               </Grid>
               <Grid item xs={12} />
@@ -184,7 +171,7 @@ export default function Home() {
           </Container>
         </Box>
       </Box>
-      <TagDialog
+      <TagModal
         dialogKey={dialogKey}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
