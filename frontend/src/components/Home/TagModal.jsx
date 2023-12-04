@@ -1,4 +1,4 @@
-import Tags from "../Home/Tags";
+import Tags from "../Home/Tag";
 import {
   Dialog,
   DialogTitle,
@@ -23,7 +23,7 @@ const predefinedColors = [
   "black",
 ];
 
-const TagDialog = ({
+const TagModal = ({
   dialogKey,
   dialogOpen,
   setDialogOpen,
@@ -110,4 +110,4 @@ const TagDialog = ({
   );
 };
 
-export default TagDialog;
+export default TagModal;

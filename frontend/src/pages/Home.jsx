@@ -8,7 +8,6 @@ import {
   Paper,
   Button,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import theme from '../theme/theme';
 import AppBarComponent from '../components/Home/Appbar';
@@ -35,7 +34,7 @@ export default function Home() {
   const [selectedColor, setSelectedColor] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [dialogKey, setDialogKey] = useState(0);
-  const [newCategory, setNewCategory] = useState(""); // Add this line
+  const [newCategory, setNewCategory] = useState("");
 
   const toggleDrawer = () => setOpen(!open);
   const handleAddCategory = () => setDialogOpen(true);
@@ -159,7 +158,7 @@ export default function Home() {
                     + New Category
                   </Button>
 
-                  <Tags tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
+                  <Tag tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
                 </Paper>
               </Grid>
               <Grid item xs={12} />
