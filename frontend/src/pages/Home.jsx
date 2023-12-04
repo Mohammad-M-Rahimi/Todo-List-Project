@@ -59,10 +59,11 @@ export default function Home() {
     if (tags.length === 0) {
       const storedTags = JSON.parse(localStorage.getItem("tags"));
       if (storedTags) {
-        setTags(storedTags);
+        setTags((prevTags) => [...prevTags, ...storedTags]);
       }
     }
-  }, [tags]);
+  }, []); // Empty dependency array, only run on mount
+  
 
   const handleDeleteTagWrapper = (tagToDelete) =>
     handleDeleteTag(tags, setTags, tagToDelete);
