@@ -28,14 +28,14 @@ const Theme = theme;
 
 export default function Home() {
   const [open, setOpen] = useState(true);
-  const [newItem, setNewItem] = useState('');
+  const [newItem, setNewItem] = useState("");
   const [todos, setTodos] = useState([]);
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState('');
-  const [tagInput, setTagInput] = useState('');
+  const [selectedColor, setSelectedColor] = useState("");
+  const [tagInput, setTagInput] = useState("");
   const [dialogKey, setDialogKey] = useState(0);
-  const [newCategory, setNewCategory] = useState(''); // Add this line
+  const [newCategory, setNewCategory] = useState(""); // Add this line
 
   const toggleDrawer = () => setOpen(!open);
   const handleAddCategory = () => setDialogOpen(true);
@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(() => {
     // Check if tags are already present in state
     if (tags.length === 0) {
-      const storedTags = JSON.parse(localStorage.getItem('tags'));
+      const storedTags = JSON.parse(localStorage.getItem("tags"));
       if (storedTags) {
         setTags(storedTags);
       }
@@ -76,7 +76,7 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={Theme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBarComponent
           open={open}
@@ -87,14 +87,14 @@ export default function Home() {
           component="main"
           sx={{
             backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
+              theme.palette.mode === "light"
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
             flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-            display: 'flex',
-            paddingTop: '60px',
+            height: "100vh",
+            overflow: "auto",
+            display: "flex",
+            paddingTop: "60px",
           }}
         >
           <Toolbar />
@@ -104,17 +104,17 @@ export default function Home() {
                 <Paper
                   sx={{
                     p: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    height: 'auto',
-                    width: '970px',
-                    maxWidth: '100%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    boxSizing: 'border-box',
-                    '@media (max-width: 760px)': {
-                      width: '100%',
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    height: "auto",
+                    width: "970px",
+                    maxWidth: "100%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    boxSizing: "border-box",
+                    "@media (max-width: 760px)": {
+                      width: "100%",
                     },
                   }}
                 >
@@ -133,11 +133,11 @@ export default function Home() {
                 <Paper
                   sx={{
                     p: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    height: 'auto',
-                    minHeight: '228px',
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    height: "auto",
+                    minHeight: "228px",
                   }}
                 >
                   <Button
@@ -145,25 +145,21 @@ export default function Home() {
                     onClick={handleAddCategory}
                     sx={{
                       mb: 1,
-                      width: '260px',
-                      backgroundColor: '#E25E3E',
-                      color: 'white',
-                      '&:hover': {
-                        backgroundColor: '#C63D2F',
+                      width: "260px",
+                      backgroundColor: "#E25E3E",
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "#C63D2F",
                       },
-                      '&:active': {
-                        backgroundColor: '#C63D2F',
+                      "&:active": {
+                        backgroundColor: "#C63D2F",
                       },
                     }}
                   >
                     + New Category
                   </Button>
-                  {newCategory && (
-                    <Typography variant="caption" color="textSecondary">
-                      {newCategory}
-                    </Typography>
-                  )}
-                  <Tag tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
+
+                  <Tags tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
                 </Paper>
               </Grid>
               <Grid item xs={12} />
