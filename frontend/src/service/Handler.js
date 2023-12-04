@@ -1,4 +1,3 @@
-// handlers.js
 import crypto from "crypto";
 
 export const handleDeleteTag = (tags, setTags, tagToDelete) => {

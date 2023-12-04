@@ -1,12 +1,10 @@
-// Tags.jsx
-import React from 'react';
 import Chip from '@mui/material/Chip';
 import CloseIcon from '@mui/icons-material/Close';
 
-const Tags = ({ tags, handleDeleteTag, insideDialog }) => {
+const Tag = ({ tag, handleDeleteTag, insideDialog }) => {
   return (
     <div>
-      {tags.map(({ tag, color }) => (
+      {tag.map(({ tag, color }) => (
         <Chip
           key={tag}
           label={tag}
@@ -33,4 +31,4 @@ const Tags = ({ tags, handleDeleteTag, insideDialog }) => {
   );
 };
 
-export default Tags;
+export default Tag;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   ThemeProvider,
   CssBaseline,
@@ -10,9 +10,8 @@ import {
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import theme from "../../theme/theme";
-
-import Modal from "./Modal"; // Updated import
-import styles from "./style/ModalStyle"; // Updated import
+import Modal from "./Modal";
+import "./style/ModalStyle.css";
 
 const Theme = theme;
 
@@ -115,7 +114,7 @@ function TodoList() {
           setEditingId={setEditingId}
           setNewCategory={setNewCategory}
           handleDeleteTag={handleDeleteTag}
-          styles={styles} // pass styles as prop
+          styles={styles}
         />
         <ul>
           {todos.map((todo) => (
