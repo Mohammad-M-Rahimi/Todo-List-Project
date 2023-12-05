@@ -1,9 +1,9 @@
+// Handler.js
 import crypto from "crypto";
 
 export const handleDeleteTag = (tags, setTags, tagToDelete) => {
   const updatedTags = tags.filter((tag) => tag.tag !== tagToDelete);
   setTags(updatedTags);
-  localStorage.setItem("tags", JSON.stringify(updatedTags));
 };
 
 export const toggleTodo = (id, setTodos, todos) => {
@@ -50,15 +50,17 @@ export const handleAddTag = (
   // Ensure selectedColor is in the format "#rrggbb"
   const formattedColor = formatColor(selectedColor);
 
-  const updatedTags = [...tags, { tag: tagInput, color: formattedColor }];
-  console.log("Updated tags:", updatedTags);
+  setTags((prevTags) => {
+    const updatedTags = [...prevTags, { tag: tagInput, color: formattedColor }];
+    console.log("Updated tags:", updatedTags);
 
-  setTags(updatedTags);
-  localStorage.setItem("tags", JSON.stringify(updatedTags));
-  setTagInput("");
-  setDialogOpen(false);
-  setDialogKey((prevKey) => prevKey + 1);
-  console.log("Tag added successfully.");
+    setTagInput("");
+    setDialogOpen(false);
+    setDialogKey((prevKey) => prevKey + 1);
+    console.log("Tag added successfully.");
+
+    return updatedTags;
+  });
 };
 
 export const isValidColor = (color) => {
@@ -67,13 +69,12 @@ export const isValidColor = (color) => {
   return colorRegex.test(color);
 };
 
+
 export const formatColor = (color) => {
-  // If the color is already in the correct format, return it
   if (isValidColor(color)) {
     return color;
   }
 
-  // Otherwise, try to convert the color to the format "#rrggbb"
   try {
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 1;
@@ -81,7 +82,7 @@ export const formatColor = (color) => {
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, 1, 1);
     const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-    return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+    return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
   } catch (error) {
     console.error("Error formatting color:", error);
     return "";

@@ -1,5 +1,5 @@
-import Chip from '@mui/material/Chip';
-import CloseIcon from '@mui/icons-material/Close';
+import Chip from "@mui/material/Chip";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Tag = ({ tags, handleDeleteTag, insideDialog }) => {
   // Check if tags is not defined or not an array
@@ -14,20 +14,22 @@ const Tag = ({ tags, handleDeleteTag, insideDialog }) => {
         <Chip
           key={tag}
           label={tag}
-          onDelete={insideDialog ? undefined : () => handleDeleteTag(tag)}
+          onDelete={
+            insideDialog ? undefined : () => handleDeleteTag({ tag, color })
+          }
           color="primary"
           variant="outlined"
           style={{
-            margin: '4px',
-            background: color || 'black',
-            color: 'white',
-            borderColor: '#E25E3E',
+            margin: "4px",
+            background: color || "black",
+            color: "white",
+            borderColor: "#E25E3E",
           }}
           deleteIcon={
             insideDialog ? null : (
               <CloseIcon
-                style={{ color: '#fff' }}
-                onClick={() => handleDeleteTag(tag)}
+                style={{ color: "#fff" }}
+                onClick={() => handleDeleteTag({ tag, color })}
               />
             )
           }

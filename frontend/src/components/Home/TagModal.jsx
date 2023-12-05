@@ -8,7 +8,12 @@ import {
   Button,
 } from "@mui/material";
 import Tags from "../Home/Tag";
-import { handleDeleteTag, handleAddTag, isValidColor, formatColor } from "../../service/Handler";
+import {
+  handleDeleteTag,
+  handleAddTag,
+  isValidColor,
+  formatColor,
+} from "../../service/Handler";
 
 const TagModal = ({
   dialogKey,
@@ -28,7 +33,6 @@ const TagModal = ({
       return;
     }
 
-    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
     // Assuming you want to add the new tag to the state
     handleAddTagWrapper(tagInput, selectedColor);
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// App.js
+import React, { useState, useEffect } from "react";
 import {
   ThemeProvider,
   CssBaseline,
@@ -8,20 +9,12 @@ import {
   Paper,
   Button,
   Toolbar,
-} from '@mui/material';
-import theme from '../theme/theme';
-import AppBarComponent from '../components/Home/Appbar';
-import Tag from '../components/Home/Tag';
-import Logic from '../components/Home/Logic';
-import TagModal from '../components/Home/TagModal';
-import {
-  handleDeleteTag,
-  toggleTodo,
-  deleteTodo,
-  handleLogout,
-  handsubmit,
-  handleAddTag,
-} from '../service/Handler';
+} from "@mui/material";
+import theme from "../theme/theme";
+import AppBarComponent from "../components/Home/Appbar";
+import Tag from "../components/Home/Tag";
+import Logic from "../components/Home/Logic";
+import TagModal from "../components/Home/TagModal";
 
 const Theme = theme;
 
@@ -34,54 +27,76 @@ export default function Home() {
   const [selectedColor, setSelectedColor] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [dialogKey, setDialogKey] = useState(0);
-  const [newCategory, setNewCategory] = useState("");
 
   const toggleDrawer = () => setOpen(!open);
   const handleAddCategory = () => setDialogOpen(true);
 
-  useEffect(() => {
-    // Check if tags are already present in state
-    if (tags.length === 0) {
-      const storedTags = JSON.parse(localStorage.getItem("tags"));
-      if (storedTags) {
-        setTags((prevTags) => [...prevTags, ...storedTags]);
-      }
-    }
-  }, [tags, newCategory]);
+  const handleDeleteTagWrapper = (tagToDelete) => {
+    const updatedTags = tags.filter((tag) => tag.tag !== tagToDelete.tag);
+    setTags(updatedTags);
+    setSelectedTag(updatedTags.length > 0 ? updatedTags[0].tag : "");
 
-  const handleDeleteTagWrapper = (tagToDelete) =>
-    handleDeleteTag(tags, setTags, tagToDelete);
+    // Assuming you have a function to filter todos based on the tag
+    const updatedTodos = todos.filter((todo) => todo.tag !== tagToDelete.tag);
+    setTodos(updatedTodos);
 
-  const toggleTodoWrapper = (id) => toggleTodo(id, setTodos, todos);
+    // Save updated tags to local storage
+    localStorage.setItem("tags", JSON.stringify(updatedTags));
+  };
 
-  const deleteTodoWrapper = (id) => deleteTodo(id, setTodos, todos);
+  const toggleTodoWrapper = (id) => {
+    setTodos((currentTodos) =>
+      currentTodos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
 
-  const handsubmitWrapper = (e) => handsubmit(e, setTodos, setNewItem, newItem);
+  const deleteTodoWrapper = (id) => {
+    setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+  };
+
+  const handsubmitWrapper = (e) => {
+    e.preventDefault();
+    setTodos((currentTodos) => [
+      ...currentTodos,
+      { id: todos.length + 1, title: newItem, completed: false },
+    ]);
+    setNewItem("");
+  };
 
   const handleAddTagWrapper = () => {
-    handleAddTag(
-      tagInput,
-      selectedColor,
-      setTagInput,
-      setDialogOpen,
-      setTags,
-      tags,
-      setDialogKey
-    );
-    // Set newCategory when adding a tag
-    setNewCategory(tagInput);
+    if (tagInput.trim() === "") {
+      console.log("Invalid tag input or color format.");
+      return;
+    }
+
+    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
+    setTags(updatedTags);
+    setTagInput("");
+    setDialogOpen(false);
+    setDialogKey((prevKey) => prevKey + 1);
+
+    // Save updated tags to local storage
+    localStorage.setItem("tags", JSON.stringify(updatedTags));
   };
-  
+
+  const isValidColor = (color) => {
+    const colorRegex = /^#[0-9A-Fa-f]{6}$/;
+    return colorRegex.test(color);
+  };
+
+  useEffect(() => {
+    // Load tags from local storage on component mount
+    const savedTags = JSON.parse(localStorage.getItem("tags")) || [];
+    setTags(savedTags);
+  }, []);
 
   return (
     <ThemeProvider theme={Theme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBarComponent
-          open={open}
-          toggleDrawer={toggleDrawer}
-          handleLogout={handleLogout}
-        />
+        <AppBarComponent open={open} toggleDrawer={toggleDrawer} />
         <Box
           component="main"
           sx={{
@@ -112,9 +127,6 @@ export default function Home() {
                     marginLeft: "auto",
                     marginRight: "auto",
                     boxSizing: "border-box",
-                    "@media (max-width: 760px)": {
-                      width: "100%",
-                    },
                   }}
                 >
                   <Logic
