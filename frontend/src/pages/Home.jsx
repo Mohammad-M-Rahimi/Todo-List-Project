@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ThemeProvider,
   CssBaseline,
@@ -39,7 +39,6 @@ export default function Home() {
   const toggleDrawer = () => setOpen(!open);
   const handleAddCategory = () => setDialogOpen(true);
 
-  // Inside your Home component
   useEffect(() => {
     // Check if tags are already present in state
     if (tags.length === 0) {
@@ -48,8 +47,7 @@ export default function Home() {
         setTags((prevTags) => [...prevTags, ...storedTags]);
       }
     }
-  }, []); // Empty dependency array, only run on mount
-  
+  }, [tags, newCategory]);
 
   const handleDeleteTagWrapper = (tagToDelete) =>
     handleDeleteTag(tags, setTags, tagToDelete);
@@ -70,9 +68,10 @@ export default function Home() {
       tags,
       setDialogKey
     );
-    // Assuming you want to set newCategory when adding a tag
+    // Set newCategory when adding a tag
     setNewCategory(tagInput);
   };
+  
 
   return (
     <ThemeProvider theme={Theme}>

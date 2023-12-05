@@ -15,6 +15,15 @@ import "./style/ModalStyle.css";
 
 const Theme = theme;
 
+const styles = {
+  todoItem: {
+    // Customize your todoItem styles here
+  },
+  completedTodoItem: {
+    // Customize your completedTodoItem styles here
+  },
+};
+
 function TodoList() {
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("todos")) || []
@@ -26,10 +35,9 @@ function TodoList() {
   const [newCategory, setNewCategory] = useState("");
   const [tags, setTags] = useState(["Work", "Gym", "Study"]);
 
-  useEffect(
-    () => localStorage.setItem("todos", JSON.stringify(todos)),
-    [todos]
-  );
+  useEffect(() => localStorage.setItem("todos", JSON.stringify(todos)), [
+    todos,
+  ]);
 
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 

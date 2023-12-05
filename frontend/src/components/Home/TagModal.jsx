@@ -1,27 +1,14 @@
-import Tags from "../Home/Tag";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
-  FormControl,
-  Input,
   TextField,
   DialogActions,
   Button,
 } from "@mui/material";
-
-const predefinedColors = [
-  "red",
-  "blue",
-  "lightblue",
-  "yellow",
-  "orange",
-  "green",
-  "purple",
-  "pink",
-  "black",
-];
+import Tags from "../Home/Tag";
+import { handleDeleteTag, handleAddTag, isValidColor, formatColor } from "../../service/Handler";
 
 const TagModal = ({
   dialogKey,
@@ -66,24 +53,6 @@ const TagModal = ({
         <DialogContentText style={{ paddingBottom: "10px" }}>
           Add/delete tags
         </DialogContentText>
-        <FormControl fullWidth style={{ marginBottom: 5 }}>
-          <Input
-            id="color-picker"
-            type="color"
-            value={selectedColor}
-            onChange={(e) => setSelectedColor(e.target.value)}
-            inputProps={{ list: "predefinedColors" }}
-            style={{ width: "55px" }}
-          />
-          <datalist id="predefinedColors">
-            {predefinedColors.map(
-              (color) =>
-                color.toLowerCase() !== "white" && (
-                  <option key={color} value={color} />
-                )
-            )}
-          </datalist>
-        </FormControl>
 
         <TextField
           type="text"

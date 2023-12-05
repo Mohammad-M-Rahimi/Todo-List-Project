@@ -61,13 +61,13 @@ export const handleAddTag = (
   console.log("Tag added successfully.");
 };
 
-const isValidColor = (color) => {
+export const isValidColor = (color) => {
   // Regular expression to check if the color is in the format "#rrggbb"
   const colorRegex = /^#[0-9A-Fa-f]{6}$/;
   return colorRegex.test(color);
 };
 
-const formatColor = (color) => {
+export const formatColor = (color) => {
   // If the color is already in the correct format, return it
   if (isValidColor(color)) {
     return color;
@@ -87,4 +87,3 @@ const formatColor = (color) => {
     return "";
   }
 };
-
