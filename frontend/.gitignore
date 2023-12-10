@@ -30,4 +30,4 @@ dist-ssr/
 # Package files
 package.json
 package-lock.json
-
+node_modules

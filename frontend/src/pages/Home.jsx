@@ -70,37 +70,36 @@ export default function Home() {
     setNewItem("");
   };
 
-  const handleAddTagWrapper = () => {
+  const handleAddTagWrapper = (tag, color) => {
     // Update validation to provide more details
-    if (tagInput.trim() === "") {
+    if (tag.trim() === "") {
       console.log("Tag input is empty.");
       return;
     }
   
+    // Check if color is provided and is a valid hex color code
     const colorRegex = /^#[0-9A-Fa-f]{6}$/;
-    if (!colorRegex.test(selectedColor)) {
-      console.log(
-        "Invalid color format. Please use a valid hex color code. Received:",
-        selectedColor
-      );
-      return;
-    }
+    if (color === undefined || (color && colorRegex.test(color))) {
+      console.log("Adding tag:", { tag, color });
   
-    console.log("Adding tag:", { tagInput, selectedColor });
+      const updatedTags = [...tags, { tag, color }];
+      console.log("Updated tags:", updatedTags);
   
-    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
-    console.log("Updated tags:", updatedTags);
+      setTags(updatedTags);
   
-    setTags(updatedTags, () => {
-      // This callback ensures that the state has been updated before proceeding
-      setTagInput("");
       setDialogOpen(false);
       setDialogKey((prevKey) => prevKey + 1);
   
       // Save updated tags to local storage
       localStorage.setItem("tags", JSON.stringify(updatedTags));
-    });
+    } else {
+      console.log(
+        "Invalid color format. Please use a valid hex color code. Received:",
+        color
+      );
+    }
   };
+  
   
 
   useEffect(() => {
