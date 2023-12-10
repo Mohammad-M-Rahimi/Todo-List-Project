@@ -1,3 +1,5 @@
+// TagModal.jsx
+import React from "react";
 import {
   Dialog,
   DialogTitle,
@@ -27,7 +29,7 @@ const TagModal = ({
   handleDeleteTagWrapper,
   handleAddTagWrapper,
 }) => {
-  const handleAddTag = () => {
+  const handleAddTag2 = () => {
     if (tagInput.trim() === "") {
       // Prevent adding empty tags
       return;
@@ -37,6 +39,7 @@ const TagModal = ({
     handleAddTagWrapper(tagInput, selectedColor);
 
     // Save tags to local storage
+    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
     localStorage.setItem("tags", JSON.stringify(updatedTags));
 
     // Close the dialog and clear the input
@@ -72,7 +75,7 @@ const TagModal = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleAddTag} color="primary">
+        <Button onClick={handleAddTag2} color="primary">
           Add Tag
         </Button>
         <Button onClick={() => setDialogOpen(false)} color="secondary">

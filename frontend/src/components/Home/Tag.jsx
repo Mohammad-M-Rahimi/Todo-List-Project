@@ -1,10 +1,10 @@
+// Tag.js
+import React from "react";
 import Chip from "@mui/material/Chip";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Tag = ({ tags, handleDeleteTag, insideDialog }) => {
-  // Check if tags is not defined or not an array
   if (!tags || !Array.isArray(tags)) {
-    // Return a message or an empty div if tags is not valid
     return <div>No tags available</div>;
   }
 
@@ -12,7 +12,7 @@ const Tag = ({ tags, handleDeleteTag, insideDialog }) => {
     <div>
       {tags.map(({ tag, color }) => (
         <Chip
-          key={tag}
+          key={`${tag}-${color}`} // Ensure the key is unique
           label={tag}
           onDelete={
             insideDialog ? undefined : () => handleDeleteTag({ tag, color })

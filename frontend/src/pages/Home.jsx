@@ -1,4 +1,4 @@
-// App.js
+// Home.jsx
 import React, { useState, useEffect } from "react";
 import {
   ThemeProvider,
@@ -27,6 +27,7 @@ export default function Home() {
   const [selectedColor, setSelectedColor] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [dialogKey, setDialogKey] = useState(0);
+  const [selectedTag, setSelectedTag] = useState("");
 
   const toggleDrawer = () => setOpen(!open);
   const handleAddCategory = () => setDialogOpen(true);
@@ -34,7 +35,6 @@ export default function Home() {
   const handleDeleteTagWrapper = (tagToDelete) => {
     const updatedTags = tags.filter((tag) => tag.tag !== tagToDelete.tag);
     setTags(updatedTags);
-    setSelectedTag(updatedTags.length > 0 ? updatedTags[0].tag : "");
 
     // Assuming you have a function to filter todos based on the tag
     const updatedTodos = todos.filter((todo) => todo.tag !== tagToDelete.tag);
@@ -42,6 +42,11 @@ export default function Home() {
 
     // Save updated tags to local storage
     localStorage.setItem("tags", JSON.stringify(updatedTags));
+
+    // Update selectedTag if needed
+    if (selectedTag === tagToDelete.tag) {
+      setSelectedTag(""); // You may want to set it to some default value
+    }
   };
 
   const toggleTodoWrapper = (id) => {
@@ -66,25 +71,37 @@ export default function Home() {
   };
 
   const handleAddTagWrapper = () => {
+    // Update validation to provide more details
     if (tagInput.trim() === "") {
-      console.log("Invalid tag input or color format.");
+      console.log("Tag input is empty.");
       return;
     }
-
-    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
-    setTags(updatedTags);
-    setTagInput("");
-    setDialogOpen(false);
-    setDialogKey((prevKey) => prevKey + 1);
-
-    // Save updated tags to local storage
-    localStorage.setItem("tags", JSON.stringify(updatedTags));
-  };
-
-  const isValidColor = (color) => {
+  
     const colorRegex = /^#[0-9A-Fa-f]{6}$/;
-    return colorRegex.test(color);
+    if (!colorRegex.test(selectedColor)) {
+      console.log(
+        "Invalid color format. Please use a valid hex color code. Received:",
+        selectedColor
+      );
+      return;
+    }
+  
+    console.log("Adding tag:", { tagInput, selectedColor });
+  
+    const updatedTags = [...tags, { tag: tagInput, color: selectedColor }];
+    console.log("Updated tags:", updatedTags);
+  
+    setTags(updatedTags, () => {
+      // This callback ensures that the state has been updated before proceeding
+      setTagInput("");
+      setDialogOpen(false);
+      setDialogKey((prevKey) => prevKey + 1);
+  
+      // Save updated tags to local storage
+      localStorage.setItem("tags", JSON.stringify(updatedTags));
+    });
   };
+  
 
   useEffect(() => {
     // Load tags from local storage on component mount
@@ -170,7 +187,11 @@ export default function Home() {
                     + New Category
                   </Button>
 
-                  <Tag tags={tags} handleDeleteTag={handleDeleteTagWrapper} />
+                  <Tag
+                    tags={tags}
+                    handleDeleteTag={handleDeleteTagWrapper}
+                    setSelectedTag={setSelectedTag}
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} />
