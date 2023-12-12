@@ -3,7 +3,7 @@ import React from "react";
 import Chip from "@mui/material/Chip";
 import CloseIcon from "@mui/icons-material/Close";
 
-const Tag = ({ tags, handleDeleteTag, insideDialog }) => {
+const Category = ({ tags, handleDeleteTag, insideDialog }) => {
   if (!tags || !Array.isArray(tags)) {
     return <div>No tags available</div>;
   }
@@ -39,4 +39,4 @@ const Tag = ({ tags, handleDeleteTag, insideDialog }) => {
   );
 };
 
-export default Tag;
+export default Category;

@@ -1,3 +1,4 @@
+// TagModal.jsx
 import React, { useState } from "react";
 import {
   Dialog,
@@ -9,44 +10,37 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import Tags from "../Home/Tag";
+import Tags from "./Category";
 import { ChromePicker } from "react-color";
-import {
-  handleDeleteTag,
-  handleAddTag,
-  isValidColor,
-  formatColor,
-} from "../../service/Handler";
 
-const TagModal = ({
+const CategoryModal = ({
   dialogKey,
   dialogOpen,
   setDialogOpen,
-  selectedColor,
-  setSelectedColor,
-  tagInput,
-  setTagInput,
   tags,
-  handleDeleteTagWrapper,
-  handleAddTagWrapper,
+  setTags,
+  setSelectedTag,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
-
-  // Set a default visible color (e.g., black)
   const defaultColor = "#000000";
+  const [tagInput, setTagInput] = useState("");
+  const [selectedColor, setSelectedColor] = useState(defaultColor);
 
-  const handleAddTag2 = () => {
+  const handleAddTag = () => {
     if (tagInput.trim() === "") {
-      // Prevent adding empty tags
       return;
     }
 
-    // Assuming you want to add the new tag to the state
-    handleAddTagWrapper(tagInput, selectedColor || defaultColor);
+    // Update tags if a new tag is added
+    if (!tags.some((t) => t.tag === tagInput)) {
+      setTags((prevTags) => [
+        ...prevTags,
+        { tag: tagInput, color: selectedColor },
+      ]);
+    }
 
-    // Save tags to local storage
-    const updatedTags = [...tags, { tag: tagInput, color: selectedColor || defaultColor }];
-    localStorage.setItem("tags", JSON.stringify(updatedTags));
+    // Select the newly added tag
+    setSelectedTag(tagInput);
 
     // Close the dialog and clear the input
     setDialogOpen(false);
@@ -62,9 +56,7 @@ const TagModal = ({
     <Dialog
       key={dialogKey}
       open={dialogOpen}
-      onClose={() => {
-        setDialogOpen(false);
-      }}
+      onClose={() => setDialogOpen(false)}
     >
       <DialogTitle>Write it Down</DialogTitle>
       <DialogContent>
@@ -83,7 +75,7 @@ const TagModal = ({
           <Button
             onClick={() => setShowColorPicker((prev) => !prev)}
             sx={{
-              backgroundColor: selectedColor || defaultColor,
+              backgroundColor: selectedColor,
               width: "100%",
               padding: "5px",
               borderRadius: "4px",
@@ -98,15 +90,10 @@ const TagModal = ({
           </Button>
         </Box>
 
-        <Tags
-          tags={tags}
-          handleDeleteTag={handleDeleteTagWrapper}
-          tagBackgroundColor={selectedColor || defaultColor}
-          insideDialog={true}
-        />
+        <Tags tags={tags} setSelectedTag={setSelectedTag} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleAddTag2} color="primary">
+        <Button onClick={handleAddTag} color="primary">
           Add Tag
         </Button>
         <Button onClick={() => setDialogOpen(false)} color="secondary">
@@ -117,4 +104,4 @@ const TagModal = ({
   );
 };
 
-export default TagModal;
+export default CategoryModal;

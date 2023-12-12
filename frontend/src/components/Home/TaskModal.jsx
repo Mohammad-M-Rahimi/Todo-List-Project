@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import {
   DialogTitle,
   DialogContent,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import "./style/ModalStyle.css";
 
-const Modal = ({
+const TaskModal = ({
   showInput,
   handleAddOrEdit,
   handleTagChange,
@@ -23,6 +23,7 @@ const Modal = ({
   setShowInput,
   editingId,
   setEditingId,
+  setTags, // Pass the setTags function
   styles,
 }) => {
   const dialogRef = useRef(null);
@@ -61,7 +62,7 @@ const Modal = ({
                 label="Task"
                 type="text"
                 fullWidth
-                value={newItem} // Corrected variable name
+                value={newItem}
                 onChange={(e) => setnewItem(e.target.value)}
               />
 
@@ -70,6 +71,7 @@ const Modal = ({
                 <Select
                   labelId="tag-label"
                   id="tag"
+                  z
                   value={selectedTag}
                   onChange={handleTagChange}
                   onClose={(event) => event.stopPropagation()}
@@ -111,4 +113,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default TaskModal;

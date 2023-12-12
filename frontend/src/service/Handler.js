@@ -1,25 +1,83 @@
-// Handler.js
 import crypto from "crypto";
 
-export const handleDeleteTag = (tags, setTags, tagToDelete) => {
-  const updatedTags = tags.filter((tag) => tag.tag !== tagToDelete);
-  setTags(updatedTags);
+export const handleTagChange = (e, tags, setTags, setSelectedTag) => {
+  const selectedValue = e.target.value;
+
+  if (!tags.includes(selectedValue)) {
+    setTags((prevTags) => [...prevTags, selectedValue]);
+  }
+
+  setSelectedTag(selectedValue);
 };
 
-export const toggleTodo = (id, setTodos, todos) => {
-  setTodos((currentTodos) =>
-    currentTodos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    )
+export const handleAddOrEdit = (
+  newItem,
+  editingId,
+  todos,
+  setTodos,
+  setEditingId,
+  setNewItem,
+  setShowInput,
+  selectedTag
+) => {
+  if (!newItem.trim() || newItem.length > 30) return;
+
+  const updatedTodos =
+    editingId !== null
+      ? todos.map((todo) =>
+          todo.id === editingId
+            ? { ...todo, title: newItem, tag: selectedTag }
+            : todo
+        )
+      : [
+          ...todos,
+          {
+            id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 1,
+            title: newItem,
+            completed: false,
+            tag: selectedTag,
+          },
+        ];
+
+  setTodos(updatedTodos);
+  setEditingId(null);
+  setNewItem("");
+  setShowInput(false);
+};
+
+export const handleEdit = (
+  id,
+  todos,
+  setNewItem,
+  setSelectedTag,
+  setEditingId,
+  setShowInput
+) => {
+  const taskToEdit = todos.find((todo) => todo.id === id);
+  if (taskToEdit) {
+    setNewItem(taskToEdit.title);
+    setSelectedTag(taskToEdit.tag);
+    setEditingId(id);
+    setShowInput(true);
+  }
+};
+
+export const handleToggleTodo = (id, todos, setTodos) => {
+  const updatedTodos = todos.map((todo) =>
+    todo.id === id ? { ...todo, completed: !todo.completed } : todo
   );
+  setTodos(updatedTodos);
 };
 
-export const deleteTodo = (id, setTodos, todos) =>
-  setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id));
+export const handleDeleteTag = (tagToDelete, tags, setTags, setSelectedTag) => {
+  const updatedTags = tags.filter((tag) => tag !== tagToDelete);
+  setTags(updatedTags);
+  setSelectedTag(updatedTags[0]);
+  localStorage.setItem("tags", JSON.stringify(updatedTags));
+};
 
-export const handleLogout = () => {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
+export const deleteTodo = (id, todos, setTodos) => {
+  setTodos(todos.filter((todo) => todo.id !== id));
 };
 
 export const handsubmit = (e, setTodos, setNewItem, newItem) => {
@@ -68,7 +126,6 @@ export const isValidColor = (color) => {
   const colorRegex = /^#[0-9A-Fa-f]{6}$/;
   return colorRegex.test(color);
 };
-
 
 export const formatColor = (color) => {
   if (isValidColor(color)) {
