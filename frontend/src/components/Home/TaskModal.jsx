@@ -45,11 +45,10 @@ const TaskModal = ({
         <div
           ref={dialogRef}
           onClick={handleClickOutside}
-          style={styles.modal} // Use the overlay style
+          className="popup-overlay" // Add the overlay class
         >
           <div
-            className="popup-content"
-            style={styles.modalContent} // Use the content style
+            className="popup-content" // Add the content class
           >
             <DialogTitle>
               {editingId !== null ? "Edit Todo" : "Add Todo"}

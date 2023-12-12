@@ -19,6 +19,8 @@ import {
   deleteTodo,
 } from "../../service/Handler"; // Import the functions from Handler.js
 
+import "../Home/style/TaskStyle.css";
+
 const Theme = theme;
 
 const Task = () => {
@@ -33,20 +35,6 @@ const Task = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const styles = {
-    todoItem: {
-      marginBottom: "10px",
-      width: "100%",
-      maxWidth: "760px",
-      marginLeft: "auto",
-      marginRight: "auto",
-      boxSizing: "border-box",
-    },
-    completedTodoItem: {
-      background: "#ddd",
-    },
-  };
-
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
@@ -60,8 +48,21 @@ const Task = () => {
         </Button>
         <Modal
           showInput={showInput}
-          handleAddOrEdit={() => handleAddOrEdit(newItem, editingId, todos, setTodos, setEditingId, setNewItem, setShowInput, selectedTag)}
-          handleTagChange={(e) => handleTagChange(e, tags, setTags, setSelectedTag)}
+          handleAddOrEdit={() =>
+            handleAddOrEdit(
+              newItem,
+              editingId,
+              todos,
+              setTodos,
+              setEditingId,
+              setNewItem,
+              setShowInput,
+              selectedTag
+            )
+          }
+          handleTagChange={(e) =>
+            handleTagChange(e, tags, setTags, setSelectedTag)
+          }
           tags={tags}
           selectedTag={selectedTag}
           newItem={newItem}
@@ -69,20 +70,16 @@ const Task = () => {
           setShowInput={setShowInput}
           editingId={editingId}
           setEditingId={setEditingId}
-          styles={styles}
         />
         <ul>
           {todos.map((todo) => (
             <li
               key={todo.id}
               className={`todo-item${todo.completed ? " completed" : ""}`}
-              style={{
-                ...styles.todoItem,
-                ...(todo.completed ? styles.completedTodoItem : {}),
-              }}
             >
-              <div>
+              <div className="container">
                 <Checkbox
+                  className="checkbox"
                   checked={todo.completed}
                   onChange={() => handleToggleTodo(todo.id, todos, setTodos)}
                 />
@@ -90,13 +87,30 @@ const Task = () => {
                   <Typography variant="body1">{todo.title}</Typography>
                   <Typography variant="caption">{todo.tag}</Typography>
                 </div>
-                <div>
-                  <IconButton onClick={() => handleEdit(todo.id, todos, setNewItem, setSelectedTag, setEditingId, setShowInput)} color="primary">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => deleteTodo(todo.id, todos, setTodos)} color="secondary">
-                    <DeleteIcon />
-                  </IconButton>
+                <div className="actions-container">
+                  <div className="actions">
+                    <IconButton
+                      onClick={() =>
+                        handleEdit(
+                          todo.id,
+                          todos,
+                          setNewItem,
+                          setSelectedTag,
+                          setEditingId,
+                          setShowInput
+                        )
+                      }
+                      color="primary"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => deleteTodo(todo.id, todos, setTodos)}
+                      color="secondary"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
                 </div>
               </div>
             </li>
