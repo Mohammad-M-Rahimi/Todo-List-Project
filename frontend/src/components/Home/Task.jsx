@@ -24,16 +24,34 @@ import "../Home/style/TaskStyle.css";
 const Theme = theme;
 
 const Task = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    return storedTodos;
+  });
+
   const [newItem, setNewItem] = useState("");
   const [selectedTag, setSelectedTag] = useState("Work");
   const [editingId, setEditingId] = useState(null);
   const [showInput, setShowInput] = useState(false);
-  const [tags, setTags] = useState(["Work", "Gym", "Study"]);
+
+  // Initialize tags state using the value from local storage or the default value
+  const [tags, setTags] = useState(() => {
+    const storedTags = JSON.parse(localStorage.getItem("tags"));
+    return storedTags || []; // Updated to check if storedTags is falsy (undefined or null)
+  });
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    // Load tags from local storage on component mount
+    const storedTags = JSON.parse(localStorage.getItem("tags")) || [];
+    console.log("Loaded tags from local storage:", storedTags);
+    setTags(storedTags);
+  }, []); // Empty dependency array ensures this effect runs only once on component mount
+
+  useEffect(() => {
+    // Save updated tags to local storage whenever tags change
+    localStorage.setItem("tags", JSON.stringify(tags));
+  }, [tags]);
+
 
   return (
     <ThemeProvider theme={Theme}>
