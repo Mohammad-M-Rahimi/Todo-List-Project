@@ -9,6 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+
 import theme from "../../theme/theme";
 import Modal from "./TaskModal";
 import {
@@ -39,11 +40,9 @@ const Task = () => {
     const storedTags = JSON.parse(localStorage.getItem("tags"));
     return storedTags || []; // Updated to check if storedTags is falsy (undefined or null)
   });
-
   useEffect(() => {
     // Load tags from local storage on component mount
     const storedTags = JSON.parse(localStorage.getItem("tags")) || [];
-    console.log("Loaded tags from local storage:", storedTags);
     setTags(storedTags);
   }, []); // Empty dependency array ensures this effect runs only once on component mount
 
@@ -52,6 +51,10 @@ const Task = () => {
     localStorage.setItem("tags", JSON.stringify(tags));
   }, [tags]);
 
+  useEffect(() => {
+    // Save updated todos to local storage whenever todos change
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <ThemeProvider theme={Theme}>
@@ -102,8 +105,10 @@ const Task = () => {
                   onChange={() => handleToggleTodo(todo.id, todos, setTodos)}
                 />
                 <div>
-                  <Typography variant="body1">{todo.title}</Typography>
-                  <Typography variant="caption">{todo.tag}</Typography>
+                  {typeof todo.title === "string" && <div>{todo.title}</div>}
+                  {typeof todo.tag === "string" && (
+                    <div>{todo.tag || "No Tag"}</div>
+                  )}
                 </div>
                 <div className="actions-container">
                   <div className="actions">

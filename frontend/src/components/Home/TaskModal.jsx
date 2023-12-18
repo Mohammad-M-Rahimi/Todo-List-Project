@@ -68,27 +68,28 @@ const TaskModal = ({
               <FormControl fullWidth style={{ marginTop: "10px" }}>
                 <InputLabel id="tag-label"></InputLabel>
                 <Select
-                  labelId="tag-label"
-                  id="tag"
-                  z
-                  value={selectedTag}
-                  onChange={handleTagChange}
-                  onClose={(event) => event.stopPropagation()}
-                >
-                  {tags.map((tag) => (
-                    <MenuItem key={tag} value={tag}>
-                      <div
-                        style={{
-                          width: "10px",
-                          height: "10px",
-                          marginRight: "5px",
-                          display: "inline-block",
-                        }}
-                      ></div>
-                      {tag}
-                    </MenuItem>
-                  ))}
-                </Select>
+  labelId="tag-label"
+  id="tag"
+  value={selectedTag}
+  onChange={handleTagChange}
+  onClose={(event) => event.stopPropagation()}
+>
+  {tags.map((tag) => (
+    <MenuItem key={tag} value={tag}>
+      <div
+        style={{
+          width: "10px",
+          height: "10px",
+          marginRight: "5px",
+          display: "inline-block",
+          backgroundColor: tag.color || "#000", // Add this line for the colored box
+        }}
+      ></div>
+      {tag.tag}
+    </MenuItem>
+  ))}
+</Select>
+
               </FormControl>
             </DialogContent>
             <DialogActions>
